@@ -1,4 +1,13 @@
-#  return real theta from a rigide regression
+#  Return the real theta from a rigide regression
+#
+# Args:
+#   dt: contextual data
+#   visitorReward: reward data
+#
+# Return:
+#   Return the real theta from a rigide regression
+#
+ 
 ReturnRealTheta <- function(dt, visitorReward) {
   K <- ncol(visitorReward)
   nF <- ncol(dt)
