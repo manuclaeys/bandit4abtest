@@ -1,4 +1,15 @@
-CtreeDataControl <- function(dt, visitorReward, is_reward_boolean) {
+# Perform various checks on the variables received as arguments
+#
+# Args:
+#   dt: contextual data
+#   visitorReward: reward data
+#   isRewardBoolean: tell if the reward is of boolean type
+#
+# Returns:
+#   Return a message and a status (true or false depending on the result of the controls)
+#
+
+CtreeDataControl <- function(dt, visitorReward, isRewardBoolean) {
   #  contextual data size controle
   if (nrow(dt) == 0) {
     message = "empty contextual data"
@@ -7,7 +18,7 @@ CtreeDataControl <- function(dt, visitorReward, is_reward_boolean) {
   }
 
   #  reward data size controle
-  if (nrow(dt) == 0) {
+  if (nrow(visitorReward) == 0) {
     message = "empty reward data"
     control = FALSE
     return(list(message = message, control = control))
@@ -39,7 +50,7 @@ CtreeDataControl <- function(dt, visitorReward, is_reward_boolean) {
   }
 
   #  Check if reward are a boolean value (option)
-  if (is_reward_boolean) {
+  if (isRewardBoolean) {
     for (i in 1:ncol(visitorReward)) {
       if (typeof(visitorReward[, i]) != "integer") {
         message = paste("The", i, "colomn of reward data is not a integer/double data so it can be define as a boolean data", sep = " ")
