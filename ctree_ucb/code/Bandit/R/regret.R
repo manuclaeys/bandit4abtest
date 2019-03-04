@@ -1,23 +1,30 @@
-###  Regret
-CumulativeRegret <- function(choice, visitorReward) {
+######### Regret
+cumulativeRegret <- function(choice,visitorReward){
+
   regret <- vector()
   visitorReward <- as.matrix(visitorReward)
-  regret <- SimpleRegret(as.vector(choice), visitorReward)
-  # plot(regret, type = 'l', ylim = c(0, nrow(visitorReward)))  #  Not very clear
-  plot(cumsum(regret), type = 'l')
+  regret <-SimpleRegret(as.vector(choice),visitorReward)
+
+  #plot(regret,type='l',ylim=c(0, nrow(visitorReward))) #Not very clear
+  plot(cumsum(regret),type='l')
   return(cumsum(regret))
 }
 
-RegretValue <- function(valChoice, vecVisitorReward) {
-  return(vecVisitorReward[which.max(vecVisitorReward)] - vecVisitorReward[valChoice])
+
+regretValue <- function(val_choice,vec_visitorReward){
+  return( vec_visitorReward[which.max(vec_visitorReward)] - vec_visitorReward[val_choice] )
+
 }
 
-SimpleRegret <- function(choice, visitorReward) {
+
+SimpleRegret <- function(choice,visitorReward){
+
   regret <- c()
-  for (i in 1:nrow(visitorReward)) {
-    regret[i] <- regretValue(as.integer(choice[i]), visitorReward[i, ])
+
+  for(i in 1:nrow(visitorReward)){
+    regret[i] <-   regretValue(as.integer(choice[i]),visitorReward[i,])
   }
-  #  plot(regret, type = 'l', ylim = c(0, nrow(visitorReward)))  #  Not very clear
-  #  plot(regret, type = 'l')
+  #plot(regret,type='l',ylim=c(0, nrow(visitorReward))) #Not very clear
+  #plot(regret,type='l')
   return(regret)
 }
