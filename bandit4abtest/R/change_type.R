@@ -3,7 +3,7 @@
 #'
 #'@param visitorReward  a dataframe
 #'
-#'@return dataframe of numerical value
+#'@return dataframe of numerical values
 #'
 #'@examples
 #'## Generates 1000 numbers from 2 binomial distributions
