@@ -4,7 +4,7 @@
 #' Dataset from a frequentist ab test conducted in 2018 by a merchant website.
 #' Visitors to the site have seen version A or version B only.
 #'  30% of the dataset is used for a pre-processing step (see CTREEUCB).
-#'  The data is not modified (missing values).
+#'  The data is not modified (missing values)..
 #'  set learn_size = 1865
 #'  The remaining 70% of the dataset is dedicated to the online phase.
 #'  It is necessary to have a reward for all variations.
