@@ -1,0 +1,320 @@
+rm(list = ls())
+
+###DATA###
+####Configuration
+#Conf_30/70
+config <- "30_70"
+df <- read.csv("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/ab_test_dataset_0_3",sep=",")
+
+#Conf_100/100
+#config <- "100_100"
+#df <- read.csv("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/ab_test_dataset_0_5",sep=",")
+
+
+#df[sample(nrow(df), 3), ]
+
+###Data format###
+df$X <- NULL
+df$hastrans <- NULL
+df$variationID.y <- NULL
+df$langID <- as.factor(df$langID)
+df$countryID <- as.factor(df$countryID)
+
+
+listCategorial =c("countryID","langID","name","device","userAgent")
+listInteger  = c("latitude","longitude")
+
+#Results for each variation
+visitorReward <- df[,c("A","B")]
+
+#Items caracteristics
+dt <- df[, c(listCategorial,listInteger)]
+
+
+####Configuration
+if(config  == "100_100" ) learn_size = 6216
+if(config  ==  "30_70"  ) learn_size = 1865
+
+
+
+dt.old <- dt
+
+####CTREE UCB####
+
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ctree_object_evaluation.R")
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ucb_bandit_object_evaluation.R")
+
+
+
+####CTREEUCBPARAMETER
+## - the size of the learning set is already calculated according to the selected configuration (learn_size)
+#  - mincriterion parameter refers to 1 -risk error accepted  (0.99,0.95,0.90)
+#  - alpha refers to the dynamic allocation parameter (U.C.B)
+#  - arm_for_learn is the original varitation (names(visitorReward)[1] or names(visitorReward)[2])
+#  testtype and teststat is refer to type of test to build the tree (see the paper for more details)
+# and are not supposed to be modified#
+
+
+ctree_parameters_control <- ctree_parameters_control_default(dt = dt.old,
+                                                             visitorReward ,
+                                                             learn_size = learn_size,
+                                                             alpha = 1,
+                                                             arm_for_learn = names(visitorReward)[1],
+                                                             is_reward_are_boolean = TRUE,
+                                                             ctree_control_val=ctree_control(
+                                                               mincriterion = 0.95,
+                                                               testtype = "Teststatistic",
+                                                               teststat = "quadratic",
+                                                               splitstat = c( "quadratic"))
+)
+
+
+my_ctree_ucb <- ctree_object_evaluation(dt= dt.old,visitorReward=visitorReward, ctree_parameters_control= ctree_parameters_control) 
+max(my_ctree_ucb$cum_reg_ctree)
+###END CTREE UCB###
+
+
+
+###Data format###
+###Other algorithms require binary or continuous variables.
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/transform_categorial_to_binary.R")
+dt <- transform_categorial_to_binary( listCategorial =listCategorial ,listInteger=listInteger, dt=dt)
+
+
+### Lin UCB ###
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/linucb_object_evaluation.R")
+linucb_parameters_control_par =linucb_parameters_control_default(dt,visitorReward,alpha = 1)
+
+my_linucb_ucb <-  linucb_object_evaluation(dt=dt[c(my_ctree_ucb$ctree_res$first_train_element:nrow(dt)),],
+                                           visitorReward=visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),],
+                                           linucb_parameters_control = linucb_parameters_control_par)
+max(my_linucb_ucb$cum_reg_linucb)
+### END Lin UCB ###
+
+
+
+############ Random ############  
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/random_bandit_object_evaluation.R")
+random_alloc <- random_bandit_object_evaluation(visitorReward=visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),])
+max(random_alloc$cum_reg_random_alloc)
+### END RANDOM ###
+
+
+### UCB ###
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ucb_bandit_object_evaluation.R")
+ucb_alloc <- ucb_bandit_object_evaluation(visitorReward=visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),],alpha = 1)
+max(ucb_alloc$cum_reg_ucb_alloc)
+###END UCB###
+
+############ Thompson Sampling ############ 
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/thompson_sampling.R")
+#source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ucb_bandit_object_evaluation.R")
+
+thompson_sampling_alloc <- thompson_sampling_object_evaluation(visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),], step  = 1, scott = FALSE)
+max(thompson_sampling_alloc$cum_reg_thompson_sampling_alloc)
+
+
+
+###PLOT WITH GGPLOT2 REGRET###
+library(ggplot2)
+
+comp_reg <- data.frame(cbind(my_ctree_ucb$cum_reg_ctree,
+                             ucb_alloc$cum_reg_ucb_alloc,
+                             my_linucb_ucb$cum_reg_linucb,
+                             thompson_sampling_alloc$cum_reg_thompson_sampling_alloc,
+                             random_alloc$cum_reg_random_alloc))
+
+
+
+#pdf('../results/cumRegret.pdf')
+
+ggplot(comp_reg, aes(c(1:nrow(comp_reg)), y = value, color = Algorithm)) + 
+  geom_line(linetype="dashed",aes(y = my_ctree_ucb$cum_reg_ctree, col = "CTREE_UCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = ucb_alloc$cum_reg_ucb_alloc, col = "UCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = my_linucb_ucb$cum_reg_linucb, col = "LinUCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = thompson_sampling_alloc$cum_reg_thompson_sampling_alloc, col = "Thompson Sampling"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = random_alloc$cum_reg_random_alloc, col = "Random"),size = 0.5) +
+  scale_colour_manual(values =  c("UCB"="brown","CTREE_UCB"="red","LinUCB"="blue","Thompson Sampling"="green","Random"="black"))+
+  xlab("Time") +
+  ylab("Regret")
+
+#dev.off()
+
+
+
+
+plot_cum_regret_for_each_subgroupe(my_ctree_ucb, K=ncol(visitorReward))
+
+
+#cumulative regret 
+max(my_ctree_ucb$cum_reg_ctree)
+max(my_linucb_ucb$cum_reg_linucb)
+max(ucb_alloc$cum_reg_ucb_alloc)
+max(thompson_sampling_alloc$cum_reg_thompson_sampling_alloc)
+max(random_alloc$cum_reg_random_alloc)
+
+
+##### config 100 100
+rm(list = ls())
+
+###DATA###
+####Configuration
+#Conf_30/70
+#config <- "30_70"
+#df <- read.csv("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/ab_test_dataset_0_3",sep=",")
+
+#Conf_100/100
+config <- "100_100"
+df <- read.csv("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/ab_test_dataset_0_5",sep=",")
+
+
+#df[sample(nrow(df), 3), ]
+
+###Data format###
+df$X <- NULL
+df$hastrans <- NULL
+df$variationID.y <- NULL
+df$langID <- as.factor(df$langID)
+df$countryID <- as.factor(df$countryID)
+
+
+listCategorial =c("countryID","langID","name","device","userAgent")
+listInteger  = c("latitude","longitude")
+
+#Results for each variation
+visitorReward <- df[,c("A","B")]
+
+#Items caracteristics
+dt <- df[, c(listCategorial,listInteger)]
+
+
+####Configuration
+if(config  == "100_100" ) learn_size = 6216
+if(config  ==  "30_70"  ) learn_size = 1865
+
+
+
+dt.old <- dt
+
+####CTREE UCB####
+
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ctree_object_evaluation.R")
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ucb_bandit_object_evaluation.R")
+
+
+
+####CTREEUCBPARAMETER
+## - the size of the learning set is already calculated according to the selected configuration (learn_size)
+#  - mincriterion parameter refers to 1 -risk error accepted  (0.99,0.95,0.90)
+#  - alpha refers to the dynamic allocation parameter (U.C.B)
+#  - arm_for_learn is the original varitation (names(visitorReward)[1] or names(visitorReward)[2])
+#  testtype and teststat is refer to type of test to build the tree (see the paper for more details)
+# and are not supposed to be modified#
+
+
+ctree_parameters_control <- ctree_parameters_control_default(dt = dt.old,
+                                                             visitorReward ,
+                                                             learn_size = learn_size,
+                                                             alpha = 1,
+                                                             arm_for_learn = names(visitorReward)[1],
+                                                             is_reward_are_boolean = TRUE,
+                                                             ctree_control_val=ctree_control(
+                                                               mincriterion = 0.95,
+                                                               testtype = "Teststatistic",
+                                                               teststat = "quadratic",
+                                                               splitstat = c( "quadratic"))
+)
+
+
+my_ctree_ucb <- ctree_object_evaluation(dt= dt.old,visitorReward=visitorReward, ctree_parameters_control= ctree_parameters_control) 
+max(my_ctree_ucb$cum_reg_ctree)
+###END CTREE UCB###
+
+
+
+###Data format###
+###Other algorithms require binary or continuous variables.
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/transform_categorial_to_binary.R")
+dt <- transform_categorial_to_binary( listCategorial =listCategorial ,listInteger=listInteger, dt=dt)
+
+
+### Lin UCB ###
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/linucb_object_evaluation.R")
+linucb_parameters_control_par =linucb_parameters_control_default(dt,visitorReward,alpha = 1)
+
+my_linucb_ucb <-  linucb_object_evaluation(dt=dt[c(my_ctree_ucb$ctree_res$first_train_element:nrow(dt)),],
+                                           visitorReward=visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),],
+                                           linucb_parameters_control = linucb_parameters_control_par)
+max(my_linucb_ucb$cum_reg_linucb)
+### END Lin UCB ###
+
+
+
+############ Random ############  
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/random_bandit_object_evaluation.R")
+random_alloc <- random_bandit_object_evaluation(visitorReward=visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),])
+max(random_alloc$cum_reg_random_alloc)
+### END RANDOM ###
+
+
+### UCB ###
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ucb_bandit_object_evaluation.R")
+ucb_alloc <- ucb_bandit_object_evaluation(visitorReward=visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),],alpha = 1)
+max(ucb_alloc$cum_reg_ucb_alloc)
+###END UCB###
+
+############ Thompson Sampling ############ 
+source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/UserR/thompson_sampling.R")
+#source("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/bandit/xp ctree_ucb/xp_revue code public/Bandit/R/ucb_bandit_object_evaluation.R")
+
+thompson_sampling_alloc <- thompson_sampling_object_evaluation(visitorReward[c(my_ctree_ucb$ctree_res$first_train_element:nrow(visitorReward)),], step  = 1, scott = FALSE)
+max(thompson_sampling_alloc$cum_reg_thompson_sampling_alloc)
+
+
+
+###PLOT WITH GGPLOT2 REGRET###
+library(ggplot2)
+
+comp_reg <- data.frame(cbind(my_ctree_ucb$cum_reg_ctree,
+                             ucb_alloc$cum_reg_ucb_alloc,
+                             my_linucb_ucb$cum_reg_linucb,
+                             thompson_sampling_alloc$cum_reg_thompson_sampling_alloc,
+                             random_alloc$cum_reg_random_alloc))
+
+
+
+#pdf('../results/cumRegret.pdf')
+
+
+
+  ggplot(comp_reg, aes(x=c(1:nrow(comp_reg)), y=my_ctree_ucb$cum_reg_ctree, color=Algorithm)) +
+  geom_line(linetype="dashed",aes(y = my_ctree_ucb$cum_reg_ctree, col = "CTREE_UCB" ),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = ucb_alloc$cum_reg_ucb_alloc, col = "UCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = my_linucb_ucb$cum_reg_linucb, col = "LinUCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = thompson_sampling_alloc$cum_reg_thompson_sampling_alloc, col = "Thompson Sampling"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = random_alloc$cum_reg_random_alloc, col = "Random"),size = 0.5) +
+  scale_colour_manual(values =  c("UCB"="brown","CTREE_UCB"="red","LinUCB"="blue","Thompson Sampling"="green","Random"="black"))+
+  xlab("Time") +
+  ylab("Regret")
+  
+  
+  
+  #dev.off()
+
+
+
+
+
+
+plot_cum_regret_for_each_subgroupe(my_ctree_ucb, K=ncol(visitorReward))
+
+
+#cumulative regret 
+max(my_ctree_ucb$cum_reg_ctree)
+max(my_linucb_ucb$cum_reg_linucb)
+max(ucb_alloc$cum_reg_ucb_alloc)
+max(thompson_sampling_alloc$cum_reg_thompson_sampling_alloc)
+max(random_alloc$cum_reg_random_alloc)
+
+
+

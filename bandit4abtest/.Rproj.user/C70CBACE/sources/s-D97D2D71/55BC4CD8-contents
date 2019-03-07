@@ -1,0 +1,33 @@
+#'bandit_reward_control
+#'
+#'Control data for bandit algorithm.
+#'See also \code{\link{control_data_missing}} and \code{\link{data_control_K}}
+#'
+#'@param visitorReward Dataframe of integer or numeric values
+#'@param K Integer value (optional)
+#'
+#'@return Logical value
+#'
+#'@examples
+#'## Generates 1000 numbers from 2 uniform distributions
+#'set.seed(4434)
+#'K1 <- rnorm(100, 30, .05)
+#'K2 <- rnorm(100, 21, .05)
+#'## Define a dataframe of rewards
+#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'## Control
+#'bandit_reward_control(visitorReward,K=3)
+#'## Control
+#'bandit_reward_control(visitorReward,K=2)
+#'visitorReward[1,1]= NA
+#'## Control
+#'bandit_reward_control(visitorReward)
+#'
+#'@export
+bandit_reward_control <- function(visitorReward, K=ncol(visitorReward) ){
+  data_control_K(visitorReward = visitorReward, K= K)
+  control_data_missing(visitorReward = visitorReward)
+}
+
+
+

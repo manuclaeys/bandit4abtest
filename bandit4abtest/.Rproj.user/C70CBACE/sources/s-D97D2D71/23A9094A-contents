@@ -1,0 +1,12 @@
+
+
+abtest2 <- df
+
+abtest1 <- load("/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/mypackage/bandit4abtest/data/abtest1.rda")
+save(abtest2, file="/home/manue/Documents/manue/Manipulation/datascience-emmanuelle/programme_R/mypackage/bandit4abtest/data/abtest2.rda")
+
+x <- sample(1000)
+devtools::use_data(abtest2, abtest2, internal = TRUE)
+
+
+devtools::use_data(x, mtcars)
