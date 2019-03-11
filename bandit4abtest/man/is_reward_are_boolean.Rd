@@ -23,10 +23,11 @@ set.seed(4434)
 K1 <- rnorm(100, 30, .05)
 K2 <- rnorm(100, 35, .05)
 ## Define a dataframe of rewards
-visitorReward <- as.data.frame(K1,K2)
+visitorReward <- as.data.frame(cbind(K1,K2))
 is_reward_are_boolean(visitorReward)
 K1 <- rbinom(1000, 1, 0.6)
 K2 <- rbinom(1000, 1, 0.7)
+visitorReward <- as.data.frame(cbind(K1,K2))
 is_reward_are_boolean(visitorReward)
 
 }
