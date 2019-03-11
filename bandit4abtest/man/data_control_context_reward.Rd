@@ -4,23 +4,19 @@
 \alias{data_control_context_reward}
 \title{data_control_context_reward}
 \usage{
-data_control_context_reward(dt, visitorReward,
-  is_reward_are_boolean = FALSE)
+data_control_context_reward(dt, visitorReward)
 }
 \arguments{
 \item{dt}{Dataframe of integer numeric or factor values}
 
 \item{visitorReward}{Dataframe of integer or numeric values}
-
-\item{is_reward_are_boolean}{logical value (optional)}
 }
 \value{
 Logical value
 }
 \description{
 Control if number of item in data reward and context data are equal
-Check if a reward is defined as logical value.
-Print a message and stop if this two conditions are not respected.
+Print a message and stop if this condition is not respected.
 Else return TRUE.
 }
 \examples{
@@ -35,12 +31,8 @@ c1 <- rnorm(50, 35, .05)
 dt <- as.data.frame(c1)
 ## Control
 data_control_context_reward(dt=dt,visitorReward=visitorReward)
-c1 <- rep("Test",100)
-dt <- as.data.frame(c1)
-data_control_context_reward(dt=dt,visitorReward=visitorReward,is_reward_are_boolean =TRUE)
 c1 <- rnorm(100, 30, .05)
 dt <- as.data.frame(c1)
-data_control_context_reward(dt=dt,visitorReward=visitorReward,is_reward_are_boolean =TRUE)
 data_control_context_reward(dt=dt,visitorReward=visitorReward)
 
 }

@@ -1,13 +1,11 @@
 #'data_control_context_reward
 #'
 #'Control if number of item in data reward and context data are equal
-#'Check if a reward is defined as logical value.
-#'Print a message and stop if this two conditions are not respected.
+#'Print a message and stop if this condition is not respected.
 #'Else return TRUE.
 #'
 #'@param visitorReward Dataframe of integer or numeric values
 #'@param dt  Dataframe of integer numeric or factor values
-#'@param is_reward_are_boolean logical value (optional)
 #'
 #'@return Logical value
 #'
@@ -23,30 +21,18 @@
 #'dt <- as.data.frame(c1)
 #'## Control
 #'data_control_context_reward(dt=dt,visitorReward=visitorReward)
-#'c1 <- rep("Test",100)
-#'dt <- as.data.frame(c1)
-#'data_control_context_reward(dt=dt,visitorReward=visitorReward,is_reward_are_boolean =TRUE)
 #'c1 <- rnorm(100, 30, .05)
 #'dt <- as.data.frame(c1)
-#'data_control_context_reward(dt=dt,visitorReward=visitorReward,is_reward_are_boolean =TRUE)
 #'data_control_context_reward(dt=dt,visitorReward=visitorReward)
 #'
 #'@export
-data_control_context_reward <- function(dt,visitorReward,is_reward_are_boolean =FALSE){
+data_control_context_reward <- function(dt,visitorReward){
 #Match size controle
 if(nrow(dt)!=nrow(visitorReward) ){
   stop("number of row in contextual data and rewards data are not equals")
   return(FALSE)
 }
 
-#Check if reward are a boolean value (option)
-if(is_reward_are_boolean == TRUE){
-  for(i in 1:ncol(visitorReward)){
-    if(typeof(visitorReward[,i]) != "integer" ){
-      stop( paste("The",i,"colomn of reward data is not a integer/double data so it can be define as a boolean data",sep=" "))
-      return(FALSE)
-    }
-  }
-}
+
   return(TRUE)
 }
