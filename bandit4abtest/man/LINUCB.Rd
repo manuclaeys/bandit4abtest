@@ -29,7 +29,7 @@ Control data in visitorReward with \code{\link{bandit_reward_control}}
 Stop if something is wrong.
 \itemize{ At each iteration
  \item Calculates the arm probabilities according to a linear regression of context in dt dataframe
- \item Choose the arm with the maximum upper bound (with \alpha parameter)
+ \item Choose the arm with the maximum upper bound (with alpha parameter)
  \item Receives a reward in visitorReward for the arm and associated iteration
  \item Updates the results matrix S.
  }

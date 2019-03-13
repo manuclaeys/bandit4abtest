@@ -7,7 +7,7 @@
 generate_Matrix_S(x)
 }
 \arguments{
-\item{K}{Integer variable}
+\item{x}{Integer variable}
 }
 \value{
 Numeric matrix

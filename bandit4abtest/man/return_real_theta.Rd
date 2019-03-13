@@ -10,6 +10,8 @@ return_real_theta(dt, visitorReward, option = "linear")
 \item{dt}{Dataframe of context}
 
 \item{visitorReward}{Dataframe of integer or numeric values}
+
+\item{option}{Option linear by default}
 }
 \value{
 theta_hat: mean estimated of each arm

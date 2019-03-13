@@ -29,7 +29,7 @@ Stop if something is wrong.
 Generate a matrix to save the results (S).
 \itemize{ At each iteration
  \item Calculates the arm probabilities
- \item Choose the arm with the maximum upper bound (with \alpha parameter)
+ \item Choose the arm with the maximum upper bound (with alpha parameter)
  \item Receives a reward in visitorReward for the arm and associated iteration
  \item Updates the results matrix S.
  }

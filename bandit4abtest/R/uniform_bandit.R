@@ -34,16 +34,13 @@
 #'uniform_bandit_alloc  <- uniform_bandit(visitorReward)
 #'uniform_bandit_alloc$S
 #'uniform_bandit_alloc$time
-
+#'@import tictoc
 #'@export
 #uniform_bandit
 uniform_bandit <- function(visitorReward, K=ncol(visitorReward) ){
 
   #control
   bandit_reward_control(visitorReward = visitorReward, K= K)
-
-  #return time elaps
-  library(tictoc)
 
   #data formating
   visitorReward <- as.matrix(visitorReward)

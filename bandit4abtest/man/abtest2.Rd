@@ -34,4 +34,8 @@ Visitors to the site have seen version A or version B only.
  It is necessary to have a reward for all variations.
  Missing values are replaced by bootstrap with the Leave at Least One method
 }
+\examples{
+ try(data(package = "bandit4abtest") )
+ load(abtest1)
+}
 \keyword{datasets}
