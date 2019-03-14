@@ -17,7 +17,7 @@ Logical value
 \description{
 Control arm and data for bandit
 Check if a dataframe gets an equal number of colonms than K possible arms.
-Check if K \geq 2. Print a message  and stop if this two conditions are not respected.
+Check if K geq 2. Print a message  and stop if this two conditions are not respected.
 Else return TRUE.
 }
 \examples{

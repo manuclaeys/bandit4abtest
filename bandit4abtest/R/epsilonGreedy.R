@@ -38,15 +38,13 @@
 #'epsilonGreedy_alloc$time
 #'epsilonGreedy_alloc$theta_hat
 #'epsilonGreedy_alloc$theta
+#'@import tictoc
 #'@export
 #######espilon-greedy############
 epsilonGreedy <- function(visitorReward, K=ncol(visitorReward) ,epsilon  = 0.25){
 
   #control
   bandit_reward_control(visitorReward = visitorReward, K= K)
-
-  #return time elaps
-  library(tictoc)
 
   #data formating
   visitorReward <- as.matrix(visitorReward)

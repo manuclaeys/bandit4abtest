@@ -43,13 +43,12 @@
 #'## Define a dataframe of rewards
 #'visitorReward <- as.data.frame( cbind(K1,K2) )
 #'thompson_sampling(visitorReward)
+#'@import tictoc
 #'@export
 #######  thompson_sampling  ############
 thompson_sampling  <- function(visitorReward, K=ncol(visitorReward), alpha=1,beta=1){
   #control data
   is_reward_are_boolean(visitorReward)
-  #return time elaps
-  library(tictoc)
 
   #data formating
   visitorReward <- as.matrix(visitorReward)

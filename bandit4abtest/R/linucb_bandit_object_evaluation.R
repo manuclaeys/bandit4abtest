@@ -1,6 +1,6 @@
 #'linucb_bandit_object_evaluation
 #'
-#'Run a \code{\linK{LINUCB}} using visitorReward and dt values.
+#'Run a \code{\link{LINUCB}} using visitorReward and dt values.
 #'Control data.
 #'Stop if something is wrong.
 #'After execution of linucb_bandit, calculates the cumulative regret

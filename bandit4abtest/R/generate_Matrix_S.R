@@ -4,7 +4,7 @@
 #' Allows to save the average empirical reward (first line) and number of trials (second line) of each arm into a matrix S.
 #' Require a numercial values to define the number of possible arm
 #'
-#'@param K Integer variable
+#'@param x Integer variable
 #'
 #'@return Numeric matrix
 #'

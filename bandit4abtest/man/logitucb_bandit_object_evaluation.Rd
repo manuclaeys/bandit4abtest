@@ -23,7 +23,7 @@ logitucb_bandit_object_evaluation(dt, visitorReward, alpha = 1,
  }
 }
 \description{
-Run a \code{\linK{LOGIT}} using visitorReward and dt values.
+Run a \code{\link{LOGIT}} using visitorReward and dt values.
 Control data.
 Stop if something is wrong.
 After execution of logitucb_bandit, calculates the cumulative regret

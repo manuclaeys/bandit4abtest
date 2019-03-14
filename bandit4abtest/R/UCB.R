@@ -5,7 +5,7 @@
 #'Generate a matrix to save the results (S).
 #' \itemize{ At each iteration
 #'  \item Calculates the arm probabilities
-#'  \item Choose the arm with the maximum upper bound (with \alpha parameter)
+#'  \item Choose the arm with the maximum upper bound (with alpha parameter)
 #'  \item Receives a reward in visitorReward for the arm and associated iteration
 #'  \item Updates the results matrix S.
 #'  }
@@ -48,12 +48,11 @@
 #'ucb_alloc$time
 #'ucb_alloc$theta_hat
 #'ucb_alloc$theta
+#'@import tictoc
 #'@export
 #UCB
 UCB <- function(visitorReward, K=ncol(visitorReward) , alpha = 1){
   bandit_reward_control(visitorReward = visitorReward, K= K)
-
-  library(tictoc)
 
   #data formating
   visitorReward <- as.matrix(visitorReward)

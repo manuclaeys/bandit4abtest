@@ -6,6 +6,7 @@
 #'
 #'@param dt Dataframe of context
 #'@param visitorReward Dataframe of integer or numeric values
+#'@param option Option linear by default
 #'
 #'@return theta_hat: mean estimated of each arm
 #'

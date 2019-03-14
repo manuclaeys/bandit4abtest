@@ -4,7 +4,7 @@
 #'Stop if something is wrong.
 #' \itemize{ At each iteration
 #'  \item Calculates the arm probabilities according to a linear regression of context in dt dataframe
-#'  \item Choose the arm with the maximum upper bound (with \alpha parameter)
+#'  \item Choose the arm with the maximum upper bound (with alpha parameter)
 #'  \item Receives a reward in visitorReward for the arm and associated iteration
 #'  \item Updates the results matrix S.
 #'  }
@@ -45,6 +45,7 @@
 #'visitorReward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
 #'LINUCB(dt,visitorReward)
+#'@import tictoc
 #'@export
 #LINUCB
 LINUCB <- function(dt,visitorReward,alpha=1,K = ncol(visitorReward)){
@@ -52,9 +53,6 @@ LINUCB <- function(dt,visitorReward,alpha=1,K = ncol(visitorReward)){
   #control data
   data_control_K( visitorReward, K=K)
   data_control_context_reward(dt,visitorReward)
-
-  #return time elaps
-  library(tictoc)
 
   #data formating
   visitorReward <- as.matrix(visitorReward)
