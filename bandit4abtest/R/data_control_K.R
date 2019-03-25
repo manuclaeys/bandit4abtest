@@ -31,7 +31,7 @@ DataControlK <- function(visitor_reward, K=ncol(visitor_reward)) {
   #arm must be superior to 2
   if (K < 2) {
     stop("arm must be superior or equal to 2")
-    return(FALSE)
+    return (FALSE)
   }
 
   #each arm get a result
