@@ -30,4 +30,3 @@ export(ucb_bandit_object_evaluation)
 export(uniform_bandit)
 export(uniform_bandit_object_evaluation)
 import(tictoc)
-
