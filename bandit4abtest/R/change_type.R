@@ -1,7 +1,7 @@
 #'Change all colomns of a dataframe into
 #'numerical type
 #'
-#'@param visitorReward  a dataframe
+#'@param visitor_reward  a dataframe
 #'
 #'@return dataframe of numerical value
 #'
@@ -11,13 +11,13 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame( cbind(as.character(K1),as.character(K2)) )
-#'typeof(visitorReward[,1])
+#'visitor_reward <- as.data.frame( cbind(as.character(K1),as.character(K2)) )
+#'typeof(visitor_reward[,1])
 #'## Change type
-#'visitorReward <- change_type(visitorReward)
-#'typeof(visitorReward[,1])
+#'visitor_reward <- ChangeType(visitor_reward)
+#'typeof(visitor_reward[,1])
 #'@export
-change_type <- function(visitorReward){
-  for(i in 1:ncol(visitorReward)) visitorReward[,i] <- as.double(as.character(visitorReward[,i]))
-  return(visitorReward)
+ChangeType <- function(visitor_reward) {
+  for (i in 1:ncol(visitor_reward)) visitor_reward[,i] <- as.double(as.character(visitor_reward[,i]))
+  return (visitor_reward)
 }

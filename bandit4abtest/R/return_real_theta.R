@@ -1,11 +1,11 @@
-#'return_real_theta
+#'ReturnRealTheta
 #'
 #'Return real theta from a rigide regression of context to arm's reward.
 #'Return coefficients of regression (except intercept)
 #'See also , \code{\link{lm}}.
 #'
 #'@param dt Dataframe of context
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param option Option linear by default
 #'
 #'@return theta_hat: mean estimated of each arm
@@ -25,37 +25,37 @@
 #'K2 = crossprod(t(dt),arm_2)
 #'arm_3 <-  as.vector(c(-1,-5,1,10))
 #'K3 = crossprod(t(dt),arm_3)
-#'visitorReward <-  data.frame(K1,K2,K3)
+#'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
-#'return_real_theta(dt,visitorReward)
+#'ReturnRealTheta(dt,visitor_reward)
 #'@export
 #
-return_real_theta <- function(dt,visitorReward,option="linear"){
+ReturnRealTheta <- function(dt, visitor_reward, option="linear") {
 
-  K <- ncol(visitorReward)
+  K <- ncol(visitor_reward)
   n_f <- ncol(dt)
   #creat th object
   th = array(0, c(K,n_f))
   colnames(th) <- colnames(dt)
-  rownames(th) <- colnames(visitorReward)
+  rownames(th) <- colnames(visitor_reward)
 
   #tempory variable
   temp <- dt
-  if(option=="linear"){
-  for(i in 1:K){
-    temp$prediction <- visitorReward[,i]
+  if (option=="linear") {
+    for (i in 1:K) {
+      temp$prediction <- visitor_reward[,i]
 
-    linearMod <- lm(prediction ~. , data = temp)  # build linear regression model on full data
-    #intercept is not save
-    th[i,] <- linearMod$coefficients[-1]
+      linearMod <- lm(prediction ~. , data = temp)  # build linear regression model on full data
+      #intercept is not save
+      th[i,] <- linearMod$coefficients[-1]
 
-    temp$prediction <- NULL
+      temp$prediction <- NULL
+    }
   }
-  }
 
-  if(option=="logit"){
-    for(i in 1:K){
-      temp$prediction <- visitorReward[,i]
+  if (option=="logit") {
+    for (i in 1:K) {
+      temp$prediction <- visitor_reward[,i]
 
       logitMod <- glm(prediction ~. , family=binomial(link='logit'), data = temp)  # build linear regression model on full data
       #intercept is not save
@@ -65,8 +65,6 @@ return_real_theta <- function(dt,visitorReward,option="linear"){
     }
   }
 
-
-
-  return('th'=th)
+  return ('th'=th)
 
 }

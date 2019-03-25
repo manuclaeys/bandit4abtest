@@ -1,24 +1,24 @@
-#'thompson_sampling
+#'ThompsonSampling
 #'
 #'A thompson sampling (TS) bandit strategy implemented by sampling, in each round, averages from a posterior
-#'distribution  \code{\link{condition_For_thompson_sampling}}, and choosing the action that maximizes the expected reward given the
+#'distribution  \code{\link{ConditionForThompsonSampling}}, and choosing the action that maximizes the expected reward given the
 #'sampled average. Conceptually, this means that the player instantiates their beliefs
 #'randomly in each round, and then acts optimally according to them.
-#'Control data in visitorReward with \code{\link{is_reward_are_boolean}}
+#'Control data in visitor_reward with \code{\link{IsRewardAreBoolean}}
 #'Stop if something is wrong.
 #'Generate a matrix to save the results (S).
 #' \itemize{ At each iteration
 #'  \item Sample an averages from a posterior in S for each arm (beta distribution with alpha and beta parameters)
 #'  \item Choose the arm with the highest average
-#'  \item Receives a reward in visitorReward for the arm and associated iteration
+#'  \item Receives a reward in visitor_reward for the arm and associated iteration
 #'  \item Updates the results matrix S.
 #'  }
 #'Returns the calculation time.
 #'Review the estimated, actual averages and number of choices for each arm.
-#'See also  \code{\link{condition_For_thompson_sampling}}, \code{\link{generate_Matrix_S}}, and \code{\link{play_arm}}.
+#'See also  \code{\link{ConditionForThompsonSampling}}, \code{\link{GenerateMatrixS}}, and \code{\link{PlayArm}}.
 #'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 #'
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
 #'@param beta Numeric value (optional)
@@ -41,56 +41,56 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame( cbind(K1,K2) )
-#'thompson_sampling(visitorReward)
+#'visitor_reward <- as.data.frame( cbind(K1,K2) )
+#'ThompsonSampling(visitor_reward)
 #'@import tictoc
 #'@export
-#######  thompson_sampling  ############
-thompson_sampling  <- function(visitorReward, K=ncol(visitorReward), alpha=1,beta=1){
+#######  ThompsonSampling  ############
+ThompsonSampling  <- function(visitor_reward, K=ncol(visitor_reward), alpha=1, beta=1) {
   #control data
-  is_reward_are_boolean(visitorReward)
+  IsRewardAreBoolean(visitor_reward)
 
   #data formating
-  visitorReward <- as.matrix(visitorReward)
+  visitor_reward <- as.matrix(visitor_reward)
 
   #keep list of choice
   choice <- c()
   #keep the list of probability
   proba <- c()
 
-  S <- generate_Matrix_S(K)
+  S <- GenerateMatrixS(K)
 
   tic()
 
-  if (K >= nrow(visitorReward)) {
+  if (K >= nrow(visitor_reward)) {
 
     warning(" more arm than visitors !")
 
-    for(j in 1:nrow(visitorReward)){
-      S <- play_arm(j,j,S,visitorReward)        #handle case where there is more arm than visitors
+    for (j in 1:nrow(visitor_reward)) {
+      S <- PlayArm(j, j, S, visitor_reward)        #handle case where there is more arm than visitors
     }
 
-    choice[1:nrow(visitorReward)] <- c(1:nrow(visitorReward))
-    proba[1:nrow(visitorReward)] <- 1/K
+    choice[1:nrow(visitor_reward)] <- c(1:nrow(visitor_reward))
+    proba[1:nrow(visitor_reward)] <- 1/K
 
-    if (K>nrow(visitorReward)) {
+    if (K > nrow(visitor_reward)) {
       S[,c(j:K) ] <- 0
     }
 
-    return(list('S'=S,'choice'= choice))
+    return (list('S'=S,'choice'= choice))
 
-  }else{
+  } else {
 
     # initialisation
-    for(j in 1:K){
-      S <- play_arm(iter=j,arm=j,S=S,visitorReward)
+    for (j in 1:K) {
+      S <- PlayArm(iter=j, arm=j, S=S, visitor_reward)
       choice[1:K] <- c(1:K)
       proba[1:K] <- 1/K
     }
 
-    for(i in (K+1):nrow(visitorReward)){
+    for (i in (K+1):nrow(visitor_reward)) {
       #sample an average from posterior distribution
-      temp <- condition_For_thompson_sampling(S,K,alpha=alpha,beta=beta)
+      temp <- ConditionForThompsonSampling(S, K, alpha=alpha, beta=beta)
       #save the choosen arm
       choice[i] <- temp$choice
       #save probability sampled
@@ -98,7 +98,7 @@ thompson_sampling  <- function(visitorReward, K=ncol(visitorReward), alpha=1,bet
       #remove temporal variable
       rm(temp)
       #update S
-      S <- play_arm(iter=i,arm=choice[i] ,S,visitorReward)
+      S <- PlayArm(iter=i, arm=choice[i], S, visitor_reward)
     }
 
     time <- toc()
@@ -107,14 +107,14 @@ thompson_sampling  <- function(visitorReward, K=ncol(visitorReward), alpha=1,bet
     th_hat=S[1,]
 
     #real coef
-    th = colMeans(visitorReward)
+    th = colMeans(visitor_reward)
 
     message("th_hat")
     message(th_hat)
     message("th real")
     message(th)
 
-    return(list('S'=S,'choice'= choice, 'proba' = proba,'time'=(time$toc - time$tic),'theta_hat'=th_hat,'theta'=th))
+    return (list('S'=S,'choice'= choice, 'proba' = proba,'time'=(time$toc - time$tic),'theta_hat'=th_hat,'theta'=th))
 
   }
 }

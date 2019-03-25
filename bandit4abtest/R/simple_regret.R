@@ -3,7 +3,7 @@
 #'Return a list with obtained regret at each iterations
 #'
 #'@param choice  Integer list
-#'@param visitorReward dataframe of integer or numeric values
+#'@param visitor_reward dataframe of integer or numeric values
 #'
 #'@return List of numeric values
 #'
@@ -13,16 +13,16 @@
 #'K1 <- rnorm(100, 30, .05)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#Random choices
 #'choice <- sample(c(1,2), 100, replace = TRUE)
-#'simpleRegret(choice=choice,visitorReward=visitorReward)
+#'SimpleRegret(choice=choice,visitor_reward=visitor_reward)
 #'
 #'@export
-simpleRegret <- function(choice,visitorReward){
+SimpleRegret <- function(choice, visitor_reward) {
   regret <- c()
-  for(i in 1:nrow(visitorReward)){
-    regret[i] <-   regretValue(as.integer(choice[i]),visitorReward[i,])
+  for (i in 1:nrow(visitor_reward)) {
+    regret[i] <- RegretValue(as.integer(choice[i]), visitor_reward[i,])
   }
-  return(regret)
+  return (regret)
 }

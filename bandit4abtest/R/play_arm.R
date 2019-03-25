@@ -1,7 +1,7 @@
 #' Assign an arm to an item
 #'
 #' The variable arm represents the selected arm
-#' visitorReward is a dataframe of rewards
+#' visitor_reward is a dataframe of rewards
 #' iter is the current iteration
 #' S is the matrix of results for each arm (tests and empirical mean)
 #' In the matrix S :
@@ -13,7 +13,7 @@
 #'@param iter Integer value
 #'@param arm  Integer value
 #'@param S  Numeric matrix
-#'@param visitorReward  Numeric matrix
+#'@param visitor_reward  Numeric matrix
 #'
 #'@return S Numeric matrix
 #'
@@ -23,24 +23,23 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame( cbind(K1,K2) )
+#'visitor_reward <- as.data.frame( cbind(K1,K2) )
 #'## Number of arms
 #'K=2
 #'## Init the S Matrix
-#'S <- generate_Matrix_S(K)
+#'S <- GenerateMatrixS(K)
 #'S
 #'## play arms uniformly
-#'for(i in 1:nrow(visitorReward)){
-#'S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+#'for(i in 1:nrow(visitor_reward)){
+#'S <- PlayArm(i,arm=(i%%K+1),S,visitor_reward)
 #'}
 #'## Results
 #'S
 #'@export
-play_arm <- function(iter,arm,S,visitorReward){
+PlayArm <- function(iter, arm, S, visitor_reward) {
   #mean
-  S[1,arm] <- ((  S[1,arm] *  S[2,arm] + visitorReward[iter,arm] ) /  ( S[2,arm] + 1 ) )
+  S[1,arm] <- ((S[1,arm] * S[2,arm] + visitor_reward[iter,arm]) / (S[2,arm] + 1))
   #play
-  S[2,arm] =  S[2,arm] + 1
-  return(S)
+  S[2,arm] = S[2,arm] + 1
+  return (S)
 }
-

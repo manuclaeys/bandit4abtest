@@ -5,7 +5,7 @@
 #'Can be equal of 0
 #'
 #'@param arm  Integer value
-#'@param vec_visitorReward Numeric vector
+#'@param vec_visitor_reward Numeric vector
 #'
 #'@return Numeric value
 #'
@@ -15,12 +15,12 @@
 #'K1 <- rnorm(100, 30, .05)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#regret of arm 1 for the fist item
-#'regretValue(1,visitorReward[1,])
+#'RegretValue(1,visitor_reward[1,])
 #'#'#regret of arm 1 for the fist item
-#'regretValue(2,visitorReward[1,])
+#'RegretValue(2,visitor_reward[1,])
 #'@export
-regretValue <- function(arm,vec_visitorReward){
-  return( as.numeric(vec_visitorReward[which.max(vec_visitorReward)] - vec_visitorReward[arm] ))
+RegretValue <- function(arm, vec_visitor_reward) {
+  return (as.numeric(vec_visitor_reward[which.max(vec_visitor_reward)] - vec_visitor_reward[arm]))
 }

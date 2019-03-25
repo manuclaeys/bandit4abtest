@@ -1,9 +1,9 @@
-#'bandit_reward_control
+#'BanditRewardControl
 #'
 #'Control data for bandit algorithm.
-#'See also \code{\link{control_data_missing}} and \code{\link{data_control_K}}
+#'See also \code{\link{ControlDataMissing}} and \code{\link{DataControlK}}
 #'
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'
 #'@return Logical value
@@ -14,20 +14,17 @@
 #'K1 <- rnorm(100, 30, .05)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
-#'bandit_reward_control(visitorReward,K=3)
+#'BanditRewardControl(visitor_reward,K=3)
 #'## Control
-#'bandit_reward_control(visitorReward,K=2)
-#'visitorReward[1,1]= NA
+#'BanditRewardControl(visitor_reward,K=2)
+#'visitor_reward[1,1]= NA
 #'## Control
-#'bandit_reward_control(visitorReward)
+#'BanditRewardControl(visitor_reward)
 #'
 #'@export
-bandit_reward_control <- function(visitorReward, K=ncol(visitorReward) ){
-  data_control_K(visitorReward = visitorReward, K= K)
-  control_data_missing(visitorReward = visitorReward)
+BanditRewardControl <- function(visitor_reward, K = ncol(visitor_reward)) {
+  DataControlK(visitor_reward = visitor_reward, K = K)
+  ControlDataMissing(visitor_reward = visitor_reward)
 }
-
-
-

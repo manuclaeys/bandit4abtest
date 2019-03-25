@@ -4,7 +4,7 @@
 #'Return a list with cumulative regret at each iterations
 #'
 #'@param choice  Integer list
-#'@param visitorReward dataframe of integer or numeric values
+#'@param visitor_reward dataframe of integer or numeric values
 #'
 #'@return List of numeric values
 #'
@@ -14,14 +14,14 @@
 #'K1 <- rnorm(100, 30, .05)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#Random choices
 #'choice <- sample(c(1,2), 100, replace = TRUE)
-#'cumulativeRegret(choice=choice,visitorReward=visitorReward)
+#'CumulativeRegret(choice=choice,visitor_reward=visitor_reward)
 #'
 #'@export
-cumulativeRegret <- function(choice,visitorReward){
-  regret <-simpleRegret(as.vector(choice),visitorReward)
-  plot(cumsum(regret),type='l',xlab="Time T",ylab="Cumulative regret")
-  return(cumsum(regret))
+CumulativeRegret <- function(choice, visitor_reward) {
+  regret <- SimpleRegret(as.vector(choice), visitor_reward)
+  plot(cumsum(regret), type='l', xlab="Time T", ylab="Cumulative regret")
+  return (cumsum(regret))
 }

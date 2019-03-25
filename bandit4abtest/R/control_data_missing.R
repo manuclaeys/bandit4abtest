@@ -1,11 +1,11 @@
-#'control_data_missing
+#'ControlDataMissing
 #'
 #'Control data for bandit.
 #'Check in a dataframe if there is some missing values
 #'Print a message if it's not respected.
 #'Else return TRUE.
 #'
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'
 #'@return Logical value
 #'
@@ -15,21 +15,19 @@
 #'K1 <- rnorm(100, 30, .05)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
-#'control_data_missing(visitorReward)
-#'visitorReward[1,1]= NA
+#'ControlDataMissing(visitor_reward)
+#'visitor_reward[1,1]= NA
 #'## Control
-#'control_data_missing(visitorReward)
+#'ControlDataMissing(visitor_reward)
 #'
 #'@export
-control_data_missing <- function(visitorReward){
+ControlDataMissing <- function(visitor_reward) {
   #no missing data
-  if(sum(colSums(is.na(visitorReward))) > 0){
+  if (sum(colSums(is.na(visitor_reward))) > 0) {
     stop("missing data in arm results database")
-    return(FALSE)
+    return (FALSE)
   }
-  return(TRUE)
+  return (TRUE)
 }
-
-

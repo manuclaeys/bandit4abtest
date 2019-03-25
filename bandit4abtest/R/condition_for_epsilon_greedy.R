@@ -1,4 +1,4 @@
-#'condition_For_epsilonGreedy
+#'ConditionForEpsilonGreedy
 #'
 #'choose the best with 1 - espsilon probability. 1 : best arm , 2 : other arm
 #'
@@ -14,29 +14,28 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame( cbind(K1,K2) )
+#'visitor_reward <- as.data.frame( cbind(K1,K2) )
 #'## Number of arms
 #'K=2
 #'## Init the S Matrix
-#'S <- generate_Matrix_S(K)
+#'S <- GenerateMatrixS(K)
 #'S
 #'## play arms uniformly
-#'for(i in 1:nrow(visitorReward)){
-#'S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+#'for(i in 1:nrow(visitor_reward)){
+#'S <- PlayArm(i,arm=(i%%K+1),S,visitor_reward)
 #'}
 #'## Results
 #'S
-#'condition_For_epsilonGreedy(S=S)
+#'ConditionForEpsilonGreedy(S=S)
 #'@export
-condition_For_epsilonGreedy <- function(S,epsilon=0.25,K= ncol(S)){
+ConditionForEpsilonGreedy <- function(S, epsilon=0.25, K=ncol(S)) {
 
   #choose the best with 1 - espsilon probability. 1 : best arm , 2 : other arm
-  res <-  sample(c(1,2) , 1, replace = T, prob=c(1-epsilon,epsilon ))
+  res <- sample(c(1,2), 1, replace = T, prob = c(1-epsilon,epsilon ))
 
   #the best one have been choose
-  if(res==1) return(as.integer(which.max(S[1,])))
+  if (res==1) return (as.integer(which.max(S[1,])))
 
   #randomly select another arm
-  return(sample(c(1:K)[-which.max(S[1,])] , 1))
-
+  return (sample(c(1:K)[-which.max(S[1,])] , 1))
 }

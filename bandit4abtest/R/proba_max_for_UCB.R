@@ -18,22 +18,22 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame( cbind(K1,K2) )
+#'visitor_reward <- as.data.frame( cbind(K1,K2) )
 #'## Number of arms
 #'K=2
 #'## Init the S Matrix
-#'S <- generate_Matrix_S(K)
+#'S <- GenerateMatrixS(K)
 #'S
 #'## play arms uniformly
-#'for(i in 1:nrow(visitorReward)){
-#'S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+#'for(i in 1:nrow(visitor_reward)){
+#'S <- PlayArm(i,arm=(i%%K+1),S,visitor_reward)
 #'}
 #'## Results
 #'S
-#'proba_max_For_UCB(S=S,iter=i+1)
+#'ProbaMaxForUCB(S=S,iter=i+1)
 #'@export
-proba_max_For_UCB <- function(S,iter,alpha=1,K=ncol(S)){
+ProbaMaxForUCB <- function(S, iter, alpha=1, K=ncol(S)) {
   choice <- c()
-  for(j in 1:K) choice[j] <- S[1,j] + alpha* sqrt( (2*log(iter))/S[2,j] )
-  return(choice)
+  for (j in 1:K) choice[j] <- S[1,j] + alpha * sqrt( (2*log(iter))/S[2,j])
+  return (choice)
 }

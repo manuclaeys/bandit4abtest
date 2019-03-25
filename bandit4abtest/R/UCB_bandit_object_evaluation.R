@@ -1,14 +1,14 @@
-#'ucb_bandit_object_evaluation
+#'UcbBanditObjectEvaluation
 #'
-#'Run the UCB algorithm using visitorReward values with \code{\link{UCB}} function.
+#'Run the UCB algorithm using visitor_reward values with \code{\link{UCB}} function.
 #'Stop if something is wrong.
 #'After execution of UCB, calculates the cumulative regret
 #'associated with the choices made.
 #'Review the cumulative regret according iterations and an ucb object.
-#'See also \code{\link{UCB}}, \code{\link{cumulativeRegret}}
+#'See also \code{\link{UCB}}, \code{\link{CumulativeRegret}}
 #'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 #'
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
 #'
@@ -24,14 +24,14 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#Run UCB algorithm with policy evaluation
-#'ucb_bandit_object_evaluation(visitorReward,alpha = 1)
+#'UcbBanditObjectEvaluation(visitor_reward,alpha = 1)
 #'
 #'@export
 #UCB object evaluation
-ucb_bandit_object_evaluation <- function(visitorReward=visitorReward,K=ncol(visitorReward),alpha){
-  ucb_alloc  <- UCB(visitorReward,alpha = alpha,K=K)
-  cum_reg_ucb_alloc  <- cumulativeRegret(ucb_alloc$choice,visitorReward)
-  return(list('ucb_alloc'=ucb_alloc ,'cum_reg_ucb_alloc'=cum_reg_ucb_alloc))
+UcbBanditObjectEvaluation <- function(visitor_reward=visitor_reward ,K=ncol(visitor_reward), alpha) {
+  ucb_alloc <- UCB(visitor_reward, alpha = alpha, K=K)
+  cum_reg_ucb_alloc <- CumulativeRegret(ucb_alloc$choice, visitor_reward)
+  return (list('ucb_alloc'=ucb_alloc ,'cum_reg_ucb_alloc'=cum_reg_ucb_alloc))
 }

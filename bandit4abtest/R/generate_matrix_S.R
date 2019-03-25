@@ -10,12 +10,12 @@
 #'
 #'@examples
 #'K = 2
-#'generate_Matrix_S(K)
+#'GenerateMatrixS(K)
 #'
 #'@export
-generate_Matrix_S <- function(x){
-  S <- matrix( rep(0,2*x),nrow = 2, ncol = x )
+GenerateMatrixS <- function(x) {
+  S <- matrix(rep(0,2*x), nrow = 2, ncol = x)
   colnames(S) <- paste('bandit', 1:x)
   rownames(S) <- c("average reward","trials")
-  return(S)
+  return (S)
 }

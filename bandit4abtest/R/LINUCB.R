@@ -1,20 +1,20 @@
 #'LINUCB algorithm
 #'
-#'Control data in visitorReward with \code{\link{bandit_reward_control}}
+#'Control data in visitor_reward with \code{\link{BanditRewardControl}}
 #'Stop if something is wrong.
 #' \itemize{ At each iteration
 #'  \item Calculates the arm probabilities according to a linear regression of context in dt dataframe
 #'  \item Choose the arm with the maximum upper bound (with alpha parameter)
-#'  \item Receives a reward in visitorReward for the arm and associated iteration
+#'  \item Receives a reward in visitor_reward for the arm and associated iteration
 #'  \item Updates the results matrix S.
 #'  }
 #'Returns the calculation time.
 #'Review the estimated, actual coefficient for each arm.
-#'See also  \code{\link{return_real_theta}},
+#'See also  \code{\link{ReturnRealTheta}},
 #'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 #'
 #'@param dt Dataframe of integer or numeric values
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
 #'
@@ -42,20 +42,20 @@
 #'K2 = crossprod(t(dt),arm_2)
 #'arm_3 <-  as.vector(c(-1,-5,1,10))
 #'K3 = crossprod(t(dt),arm_3)
-#'visitorReward <-  data.frame(K1,K2,K3)
+#'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
-#'LINUCB(dt,visitorReward)
+#'LINUCB(dt,visitor_reward)
 #'@import tictoc
 #'@export
 #LINUCB
-LINUCB <- function(dt,visitorReward,alpha=1,K = ncol(visitorReward)){
+LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
 
   #control data
-  data_control_K( visitorReward, K=K)
-  data_control_context_reward(dt,visitorReward)
+  DataControlK(visitor_reward, K = K)
+  DataControlContextReward(dt, visitor_reward)
 
   #data formating
-  visitorReward <- as.matrix(visitorReward)
+  visitor_reward <- as.matrix(visitor_reward)
 
   #Context matrix
   D <- as.matrix(dt)
@@ -63,34 +63,34 @@ LINUCB <- function(dt,visitorReward,alpha=1,K = ncol(visitorReward)){
   n_f <- ncol(D)
 
   #Keep the past choice for regression
-  choices= list(rep.int(0,n))
-  rewards= list(rep.int(0,n))
+  choices = list(rep.int(0,n))
+  rewards = list(rep.int(0,n))
   proba = list(rep.int(0,n))
 
   #parameters to modelize
   th_hat = array(0, c(K,n_f))
   colnames(th_hat) <- colnames(dt)
-  rownames(th_hat) <- colnames(visitorReward)
+  rownames(th_hat) <- colnames(visitor_reward)
 
   #regression variable
-  b      <- matrix(0,K, n_f)
-  A  <- array(0, c(n_f,n_f,K))
+  b <- matrix(0, K, n_f)
+  A <- array(0, c(n_f, n_f, K))
 
   #tempory variable
-  p      = list(rep.int(0,K))
+  p = list(rep.int(0, K))
 
   #time keeper
   tic()
 
   #initialization
-  for (j in 1:K){
+  for (j in 1:K) {
     A[,,j]= diag(n_f)
   }
 
 
-  for(i in 1:n){
+  for (i in 1:n) {
     x_i = D[i,]
-    for(j in 1:K){
+    for (j in 1:K) {
       A_inv      = solve(A[,,j])
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i
@@ -100,13 +100,13 @@ LINUCB <- function(dt,visitorReward,alpha=1,K = ncol(visitorReward)){
     }
 
     # choose the highest,
-    choices[i] =  which.max(p)
+    choices[i] = which.max(p)
 
     #save probability
     proba[i] = max(unlist(p))
 
     # see what kind of result we get
-    rewards[i] = visitorReward[i,as.integer(choices[i])]
+    rewards[i] = visitor_reward[i,as.integer(choices[i])]
 
     # update the input vector
     A[,,as.integer(choices[i])] = A[,,as.integer(choices[i])]  + x_i %*% t(x_i)
@@ -117,9 +117,9 @@ LINUCB <- function(dt,visitorReward,alpha=1,K = ncol(visitorReward)){
   time <- toc()
 
   #return real theta from a rigide regression
-  th <- return_real_theta(dt=dt,visitorReward=visitorReward)
+  th <- ReturnRealTheta(dt=dt,visitor_reward=visitor_reward)
 
   #return  data , models, groups and results
-  return(list('proba' = unlist(proba),'theta_hat'=th_hat,'theta'=th,'choice'=unlist(choices),'time'=(time$toc - time$tic)))
+  return (list('proba' = unlist(proba),'theta_hat'=th_hat,'theta'=th,'choice'=unlist(choices),'time'=(time$toc - time$tic)))
 
 }

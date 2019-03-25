@@ -1,16 +1,16 @@
-#'linucb_bandit_object_evaluation
+#'LinucbBanditObjectEvaluation
 #'
-#'Run a \code{\link{LINUCB}} using visitorReward and dt values.
+#'Run a \code{\link{LINUCB}} using visitor_reward and dt values.
 #'Control data.
 #'Stop if something is wrong.
 #'After execution of linucb_bandit, calculates the cumulative regret
 #'associated with the choices made.
 #'Review the cumulative regret according iterations and an linucb_bandit object.
-#'See also \code{\link{LINUCB}}, \code{\link{cumulativeRegret}}
+#'See also \code{\link{LINUCB}}, \code{\link{CumulativeRegret}}
 #'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 #'
 #'@param dt Dataframe of integer or numeric values
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param alpha numerical value (optional)
 #'@param K Integer value (optional)
 #'
@@ -38,13 +38,13 @@
 #'arm_3 <-  as.vector(c(-1,-5,1,10))
 #'K3 = 1/(1+exp(- crossprod(t(dt),arm_3)))
 #'K3 = vapply(K3, function(x) rbinom(1, 1, x), as.integer(1L))
-#'visitorReward <-  data.frame(K1,K2,K3)
+#'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
-#'linucb_bandit_object_evaluation(dt,visitorReward)
+#'LinucbBanditObjectEvaluation(dt,visitor_reward)
 #'@export
 #linucb_bandit object evaluation
-linucb_bandit_object_evaluation <- function(dt,visitorReward,alpha=1,K=ncol(visitorReward)){
-  linucb_bandit_alloc  <- LINUCB(dt=dt,visitorReward=visitorReward,alpha=alpha,K = K)
-  cum_reg_linucb_bandit_alloc  <- cumulativeRegret(linucb_bandit_alloc$choice,visitorReward)
-    return(list('linucb_bandit_alloc'=linucb_bandit_alloc ,'cum_reg_linucb_bandit_alloc'=cum_reg_linucb_bandit_alloc))
+LinucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
+  linucb_bandit_alloc <- LINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K=K)
+  cum_reg_linucb_bandit_alloc <- CumulativeRegret(linucb_bandit_alloc$choice,visitor_reward)
+  return (list('linucb_bandit_alloc'=linucb_bandit_alloc ,'cum_reg_linucb_bandit_alloc'=cum_reg_linucb_bandit_alloc))
 }

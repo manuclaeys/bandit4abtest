@@ -1,21 +1,21 @@
-#'thompson_sampling_bandit_object_evaluation
+#'ThompsonSamplingBanditObjectEvaluation
 #'
-#'Run the Thompson Sampling algorithm using visitorReward values with \code{\link{thompson_sampling}} function.
+#'Run the Thompson Sampling algorithm using visitor_reward values with \code{\link{ThompsonSampling}} function.
 #'Stop if something is wrong.
 #'After execution of Thompson Sampling, calculates the cumulative regret
 #'associated with the choices maded.
 #'Review the cumulative regret according iterations and an thompson sampling object.
-#'See also \code{\link{thompson_sampling}}, \code{\link{cumulativeRegret}}
+#'See also \code{\link{ThompsonSampling}}, \code{\link{CumulativeRegret}}
 #'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
 #'
-#'@param visitorReward Dataframe of integer or numeric values
+#'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
 #'@param beta Numeric value (optional)
 #'
 #'@return
 #' \itemize{ List of element:
-#'  \item thompson_sampling_alloc: thompson_sampling object ,
+#'  \item ThompsonSampling_alloc: ThompsonSampling object ,
 #'  \item cum_reg_ucb_alloc: List numeric.
 #'  }
 #'
@@ -25,14 +25,14 @@
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'## Define a dataframe of rewards
-#'visitorReward <- as.data.frame(cbind(K1,K2) )
+#'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#Run Thompson Sampling algorithm with policy evaluation
-#'thompson_sampling_bandit_object_evaluation(visitorReward,alpha = 1, beta = 1 )
+#'ThompsonSamplingBanditObjectEvaluation(visitor_reward,alpha = 1, beta = 1 )
 #'
 #'@export
 #thompson sampling object evaluation
-thompson_sampling_bandit_object_evaluation <- function(visitorReward=visitorReward,K=ncol(visitorReward),alpha=1,beta=1){
-  thompson_sampling_alloc  <- thompson_sampling(visitorReward,alpha = alpha, beta=beta,K=K)
-  cum_reg_thompson_sampling_alloc  <- cumulativeRegret(thompson_sampling_alloc$choice,visitorReward)
-  return(list('thompson_sampling_alloc'=thompson_sampling_alloc ,'cum_reg_thompson_sampling_alloc'=cum_reg_thompson_sampling_alloc))
+ThompsonSamplingBanditObjectEvaluation <- function(visitor_reward=visitor_reward, K=ncol(visitor_reward), alpha=1, beta=1) {
+  ThompsonSampling_alloc <- ThompsonSampling(visitor_reward, alpha = alpha, beta = beta, K = K)
+  cum_reg_ThompsonSampling_alloc <- CumulativeRegret(ThompsonSampling_alloc$choice, visitor_reward)
+  return (list('ThompsonSampling_alloc'=ThompsonSampling_alloc ,'cum_reg_ThompsonSampling_alloc'=cum_reg_ThompsonSampling_alloc))
 }
