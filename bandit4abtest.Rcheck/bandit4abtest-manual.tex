@@ -1,0 +1,1690 @@
+\nonstopmode{}
+\documentclass[letterpaper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `bandit4abtest'}}
+\par\bigskip{\large \today}
+\end{center}
+\begin{description}
+\raggedright{}
+\inputencoding{utf8}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Package for apply dynamique allocation in A/B test}
+\item[Version]\AsIs{0.1.0}
+\item[Author]\AsIs{Emmanuelle Claeys}
+\item[Maintainer]\AsIs{Emmanuelle Claeys  }\email{claeys@unistra.fr}\AsIs{}
+\item[Description]\AsIs{Contains functions for imrpove traditionnal A/B test by methodes from bandit theory.
+Includes the most common bandit algorithms and some new methods specific to A/B tests.}
+\item[License]\AsIs{GPL-2}
+\item[Encoding]\AsIs{UTF-8}
+\item[LazyData]\AsIs{true}
+\item[RoxygenNote]\AsIs{6.1.1}
+\item[Imports]\AsIs{tictoc}
+\item[NeedsCompilation]\AsIs{no}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{abtest1}{abtest1}{abtest1}
+\keyword{datasets}{abtest1}
+%
+\begin{Description}\relax
+A/B test on 6216 visitors of a website (Learnset:30\% Trainset 70\%).
+Dataset from a frequentist ab test conducted in 2018 by a merchant website.
+Visitors to the site have seen version A or version B only.
+30
+The data is not modified (missing values).
+set learn\_size = 1865
+The remaining 70
+It is necessary to have a reward for all variations.
+Missing values are replaced by bootstrap with the Leave at Least One method
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+abtest1
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+A data frame with 53940 rows and 10 variables:
+\begin{description}
+
+\item[countryID] ID of visitor's country, factor
+\item[latitude] last position of visitor, recorded before the test, numeric
+\item[longitude] last position of visitor, recorded before the test, numeric
+\item[langID] ID of visitor language, factor
+\item[name] visitor's OS, factor
+\item[device] ID of visitor device, factor
+\item[userAgent] visitor's user agent, factor
+\item[A] visitor's reward with A version of a website
+\item[B] visitor's reward with A version of a website
+...
+
+\end{description}
+\end{Format}
+%
+\begin{Source}\relax
+\url{http://abtasty.com/}
+\end{Source}
+%
+\begin{Examples}
+\begin{ExampleCode}
+ try(data(package = "bandit4abtest") )
+ load(abtest1)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{abtest2}{abtest2}{abtest2}
+\keyword{datasets}{abtest2}
+%
+\begin{Description}\relax
+A/B test on 6216 visitors of a website (Learnset:100\% Trainset 100\%).
+Dataset from a frequentist ab test conducted in 2018 by a merchant website.
+Visitors to the site have seen version A or version B only.
+100\% of the dataset is used for a pre-processing step (see CTREEUCB).
+The data is not modified (missing values).
+set learn\_size = 6216
+100\% of the same dataset is dedicated to the online phase.
+It is necessary to have a reward for all variations.
+Missing values are replaced by bootstrap with the Leave at Least One method
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+abtest2
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+A data frame with 53940 rows and 10 variables:
+\begin{description}
+
+\item[countryID] ID of visitor's country, factor
+\item[latitude] last position of visitor, recorded before the test, numeric
+\item[longitude] last position of visitor, recorded before the test, numeric
+\item[langID] ID of visitor language, factor
+\item[name] visitor's OS, factor
+\item[device] ID of visitor device, factor
+\item[userAgent] visitor's user agent, factor
+\item[A] visitor's reward with A version of a website
+\item[B] visitor's reward with A version of a website
+...
+
+\end{description}
+\end{Format}
+%
+\begin{Source}\relax
+\url{http://abtasty.com/}
+\end{Source}
+%
+\begin{Examples}
+\begin{ExampleCode}
+ try(data(package = "bandit4abtest") )
+ load(abtest1)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{bandit4abtest}{bandit4abtest Package}{bandit4abtest}
+\aliasA{bandit4abtest-package}{bandit4abtest}{bandit4abtest.Rdash.package}
+%
+\begin{Description}\relax
+Contains functions for imrpove traditionnal A/B test by methodes from bandit theory.
+\end{Description}
+%
+\begin{Author}\relax
+Emmanuelle Claeys \email{claeys@unistra.fr}
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{bandit\_reward\_control}{bandit\_reward\_control}{bandit.Rul.reward.Rul.control}
+%
+\begin{Description}\relax
+Control data for bandit algorithm.
+See also \code{\LinkA{control\_data\_missing}{control.Rul.data.Rul.missing}} and \code{\LinkA{data\_control\_K}{data.Rul.control.Rul.K}}
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bandit_reward_control(visitorReward, K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Logical value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 21, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+## Control
+bandit_reward_control(visitorReward,K=3)
+## Control
+bandit_reward_control(visitorReward,K=2)
+visitorReward[1,1]= NA
+## Control
+bandit_reward_control(visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{change\_data\_type\_for\_ctree}{change\_data\_type\_for\_ctree}{change.Rul.data.Rul.type.Rul.for.Rul.ctree}
+%
+\begin{Description}\relax
+Check if a reward is defined as logical value: change reward type as factor.
+Check if a a colonm of covariates is caractere or logical: change type as factor.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+change_data_type_for_ctree(dt, is_reward_are_boolean = FALSE,
+  visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of integer numeric or factor values
+
+\item[\code{is\_reward\_are\_boolean}] logical value (optional)
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+List with the updated dataframe dt and the updated visitorReward
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+c1 <- rep("Test",100)
+dt <- as.data.frame(c1)
+typeof(change_data_type_for_ctree(dt=dt,visitorReward=dt)$visitorReward[,1])
+K1 <- sample(c(0,1),replace=TRUE,size= 100)
+visitorReward <- as.data.frame(K1)
+typeof(change_data_type_for_ctree(dt=dt,visitorReward=dt,is_reward_are_boolean=FALSE)$visitorReward[,1])
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{change\_type}{Change all colomns of a dataframe into numerical type}{change.Rul.type}
+%
+\begin{Description}\relax
+Change all colomns of a dataframe into
+numerical type
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+change_type(visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] a dataframe
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+dataframe of numerical value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(as.character(K1),as.character(K2)) )
+typeof(visitorReward[,1])
+## Change type
+visitorReward <- change_type(visitorReward)
+typeof(visitorReward[,1])
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{condition\_For\_epsilonGreedy}{condition\_For\_epsilonGreedy}{condition.Rul.For.Rul.epsilonGreedy}
+%
+\begin{Description}\relax
+choose the best with 1 - espsilon probability. 1 : best arm , 2 : other arm
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+condition_For_epsilonGreedy(S, epsilon = 0.25, K = ncol(S))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{S}] Numeric matrix
+
+\item[\code{epsilon}] Numeric value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Integer value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(K1,K2) )
+## Number of arms
+K=2
+## Init the S Matrix
+S <- generate_Matrix_S(K)
+S
+## play arms uniformly
+for(i in 1:nrow(visitorReward)){
+S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+}
+## Results
+S
+condition_For_epsilonGreedy(S=S)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{condition\_For\_thompson\_sampling}{condition\_For\_thompson\_sampling}{condition.Rul.For.Rul.thompson.Rul.sampling}
+%
+\begin{Description}\relax
+Samples for each arm an average according to its probability distribution from the beta law (according to number of sucess and trials in S matrix)see function
+see \code{\LinkA{rbeta}{rbeta}}.
+Give the arm with the highest average score.
+Returns the best estimated arm and associated probability.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+condition_For_thompson_sampling(S, K = ncol(S), alpha = 1, beta = 1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{S}] :numerical matrix of results
+
+\item[\code{K}] :number of arm (optional)
+
+\item[\code{alpha}] :a parameter (optional)
+
+\item[\code{beta}] :a parameter (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+list of choice (number of best arm) and probability (probablity to be the best)
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(K1,K2) )
+## Number of arms
+K=2
+## Init the S Matrix
+S <- generate_Matrix_S(K)
+S
+## play arms uniformly
+for(i in 1:nrow(visitorReward)){
+S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+}
+## Results
+S
+## Choose next arm with thompson sampling policy
+condition_For_thompson_sampling(S)
+#Density
+plot(density( rbeta(100, 1 +  S[1,1]*S[2,1], 1 + S[2,1] - S[1,1]*S[2,1])))
+plot(density( rbeta(100, 1 +  S[1,2]*S[2,2], 1 + S[2,2] - S[1,2]*S[2,2])))
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{condition\_For\_UCB}{Returns the arm with the highest bound}{condition.Rul.For.Rul.UCB}
+%
+\begin{Description}\relax
+Calculates, for each colonne of S (selected arm) an
+upper bound according to the Hoeffding inequality
+(dependent on the iter iteration) via \code{\LinkA{proba\_max\_For\_UCB}{proba.Rul.max.Rul.For.Rul.UCB}} function
+It is possible to adjust this bound via an
+alpha parameter (default alpha = 1).
+Returns the arm with the highest bound
+See also \code{\LinkA{proba\_max\_For\_UCB}{proba.Rul.max.Rul.For.Rul.UCB}}
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+condition_For_UCB(S, iter, alpha = 1, K = ncol(S))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{S}] Numeric matrix
+
+\item[\code{iter}] Integer value (optional)
+
+\item[\code{alpha}] Numeric value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Integer value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(K1,K2) )
+## Number of arms
+K=2
+## Init the S Matrix
+S <- generate_Matrix_S(K)
+S
+## play arms uniformly
+for(i in 1:nrow(visitorReward)){
+S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+}
+## Results
+S
+proba_max_For_UCB(S=S,iter=i+1)
+condition_For_UCB(S=S,iter=i+1)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{control\_data\_missing}{control\_data\_missing}{control.Rul.data.Rul.missing}
+%
+\begin{Description}\relax
+Control data for bandit.
+Check in a dataframe if there is some missing values
+Print a message if it's not respected.
+Else return TRUE.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+control_data_missing(visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Logical value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 21, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+## Control
+control_data_missing(visitorReward)
+visitorReward[1,1]= NA
+## Control
+control_data_missing(visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{cumulativeRegret}{Return list of cumulative regret}{cumulativeRegret}
+%
+\begin{Description}\relax
+Plot the cumulative regret overt the time.
+Return a list with cumulative regret at each iterations
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cumulativeRegret(choice, visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{choice}] Integer list
+
+\item[\code{visitorReward}] dataframe of integer or numeric values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+List of numeric values
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 21, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Random choices
+choice <- sample(c(1,2), 100, replace = TRUE)
+cumulativeRegret(choice=choice,visitorReward=visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{data\_control\_context\_reward}{data\_control\_context\_reward}{data.Rul.control.Rul.context.Rul.reward}
+%
+\begin{Description}\relax
+Control if number of item in data reward and context data are equal
+Print a message and stop if this condition is not respected.
+Else return TRUE.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+data_control_context_reward(dt, visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of integer numeric or factor values
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Logical value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 35, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(K1)
+## Define a dataframe of context
+c1 <- rnorm(50, 35, .05)
+dt <- as.data.frame(c1)
+## Control
+data_control_context_reward(dt=dt,visitorReward=visitorReward)
+c1 <- rnorm(100, 30, .05)
+dt <- as.data.frame(c1)
+data_control_context_reward(dt=dt,visitorReward=visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{data\_control\_K}{data\_control\_K}{data.Rul.control.Rul.K}
+%
+\begin{Description}\relax
+Control arm and data for bandit
+Check if a dataframe gets an equal number of colonms than K possible arms.
+Check if K geq 2. Print a message  and stop if this two conditions are not respected.
+Else return TRUE.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+data_control_K(visitorReward, K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Logical value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(K1)
+## Control
+data_control_K(visitorReward)
+K2 <- rnorm(100, 21, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+## Control
+data_control_K(visitorReward,K=3)
+## Control
+data_control_K(visitorReward,K=2)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{epsilonGreedy}{epsilonGreedy algorithm}{epsilonGreedy}
+%
+\begin{Description}\relax
+Control data in visitorReward with \code{\LinkA{bandit\_reward\_control}{bandit.Rul.reward.Rul.control}}
+Stop if something is wrong.
+Generate a matrix to save the results (S).
+At each iteration play the best arm with a probability of 1-epsilon and
+other arm with probability epsilon
+Returns the calculation time.
+Return the estimated and actual averages and number of choices for each arm.
+See also \code{\LinkA{condition\_epsilonGreedy}{condition.Rul.epsilonGreedy}}, \code{\LinkA{generate\_Matrix\_SK}{generate.Rul.Matrix.Rul.SK}},
+and \code{\LinkA{play\_arm}{play.Rul.arm}}.
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+epsilonGreedy(visitorReward, K = ncol(visitorReward), epsilon = 0.25)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+
+\item[\code{epsilon}] Numeric value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item S:numerical matrix of results ,
+\item choice: choices of epsilonGreedy,
+\item time: time of cumputation,
+\item theta\_hat: mean estimated of each arm
+\item theta: real mean of each arm
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 10000 numbers from 2 binomial  distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run epsilon Greedy algorithm
+epsilonGreedy_alloc  <- epsilonGreedy(visitorReward,epsilon  = 0.25)
+epsilonGreedy_alloc$S
+barplot(table(epsilonGreedy_alloc$choice),main = "Histogram of choices",xlab="arm")
+epsilonGreedy_alloc$time
+epsilonGreedy_alloc$theta_hat
+epsilonGreedy_alloc$theta
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{epsilonGreedy\_bandit\_object\_evaluation}{epsilonGreedy\_bandit\_object\_evaluation}{epsilonGreedy.Rul.bandit.Rul.object.Rul.evaluation}
+%
+\begin{Description}\relax
+Run the epsilonGreedy algorithm using visitorReward values with \code{\LinkA{epsilonGreedy}{epsilonGreedy}} function.
+Stop if something is wrong.
+After execution of epsilonGreedy, calculates the cumulative regret
+associated with the choices made.
+Review the cumulative regret according iterations and an epsilonGreedy object.
+See also \code{\LinkA{epsilonGreedy}{epsilonGreedy}}, \code{\LinkA{cumulativeRegret}{cumulativeRegret}}
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+epsilonGreedy_bandit_object_evaluation(visitorReward = visitorReward,
+  K = ncol(visitorReward), epsilon = 0.25)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+
+\item[\code{epsilon}] Numeric value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item epsilonGreedy\_alloc: epsilonGreedy object ,
+\item cum\_reg\_epsilonGreedy\_alloc: List numeric.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run epsilonGreedy algorithm with policy evaluation
+epsilonGreedy_bandit_object_evaluation(visitorReward,epsilon = 0.25)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{generate\_Matrix\_S}{Generate a S Matrix}{generate.Rul.Matrix.Rul.S}
+%
+\begin{Description}\relax
+Returns a matrix initialized to 0 of dimension K by 2.
+Allows to save the average empirical reward (first line) and number of trials (second line) of each arm into a matrix S.
+Require a numercial values to define the number of possible arm
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+generate_Matrix_S(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] Integer variable
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Numeric matrix
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+K = 2
+generate_Matrix_S(K)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{is\_reward\_are\_boolean}{is\_reward\_are\_boolean}{is.Rul.reward.Rul.are.Rul.boolean}
+%
+\begin{Description}\relax
+Check if a reward is defined as logical value.
+Print a message and stop if this condition is not respected.
+Else return TRUE.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+is_reward_are_boolean(visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Logical value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 35, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2))
+is_reward_are_boolean(visitorReward)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+visitorReward <- as.data.frame(cbind(K1,K2))
+is_reward_are_boolean(visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{LINUCB}{LINUCB algorithm}{LINUCB}
+%
+\begin{Description}\relax
+Control data in visitorReward with \code{\LinkA{bandit\_reward\_control}{bandit.Rul.reward.Rul.control}}
+Stop if something is wrong.
+\begin{itemize}
+ At each iteration
+\item Calculates the arm probabilities according to a linear regression of context in dt dataframe
+\item Choose the arm with the maximum upper bound (with alpha parameter)
+\item Receives a reward in visitorReward for the arm and associated iteration
+\item Updates the results matrix S.
+
+\end{itemize}
+
+Returns the calculation time.
+Review the estimated, actual coefficient for each arm.
+See also  \code{\LinkA{return\_real\_theta}{return.Rul.real.Rul.theta}},
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+LINUCB(dt, visitorReward, alpha = 1, K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of integer or numeric values
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{alpha}] Numeric value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item choice: choices of UCB,
+\item proba: probability of the chosen arms,
+\item time: time of cumputation,
+\item theta\_hat: coefficients estimated of each arm
+\item theta: real coefficients of each arm
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+size.tot = 1000
+set.seed(4649)                          # this makes the example exactly reproducible
+x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+x2 = runif(size.tot, min=0, max=10)
+x3 = runif(size.tot, min=0, max=10)
+x4 = runif(size.tot, min=0, max=10)
+dt = cbind(x1,x2,x3,x4)
+#arm reward
+arm_1 <-  as.vector(c(-1,9,-8,4))
+K1 = crossprod(t(dt),arm_1)
+arm_2 <-  as.vector(c(-1,2,1,0))
+K2 = crossprod(t(dt),arm_2)
+arm_3 <-  as.vector(c(-1,-5,1,10))
+K3 = crossprod(t(dt),arm_3)
+visitorReward <-  data.frame(K1,K2,K3)
+dt <- as.data.frame(dt)
+LINUCB(dt,visitorReward)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{linucb\_bandit\_object\_evaluation}{linucb\_bandit\_object\_evaluation}{linucb.Rul.bandit.Rul.object.Rul.evaluation}
+%
+\begin{Description}\relax
+Run a \code{\LinkA{LINUCB}{LINUCB}} using visitorReward and dt values.
+Control data.
+Stop if something is wrong.
+After execution of linucb\_bandit, calculates the cumulative regret
+associated with the choices made.
+Review the cumulative regret according iterations and an linucb\_bandit object.
+See also \code{\LinkA{LINUCB}{LINUCB}}, \code{\LinkA{cumulativeRegret}{cumulativeRegret}}
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+linucb_bandit_object_evaluation(dt, visitorReward, alpha = 1,
+  K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of integer or numeric values
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{alpha}] numerical value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item linucb\_bandit\_alloc: linucb bandit object ,
+\item cum\_reg\_linucb\_bandit\_alloc: List numeric.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+size.tot = 1000
+set.seed(4649)                          # this makes the example exactly reproducible
+x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+x2 = runif(size.tot, min=0, max=10)
+x3 = runif(size.tot, min=0, max=10)
+x4 = runif(size.tot, min=0, max=10)
+dt = cbind(x1,x2,x3,x4)
+#arm reward
+arm_1 <-  as.vector(c(-1,9,-8,4))
+K1 = 1/(1+exp(- crossprod(t(dt),arm_1))) # inverse logit transform of linear predictor
+K1 = vapply(K1, function(x) rbinom(1, 1, x), as.integer(1L))
+arm_2 <-  as.vector(c(-1,2,1,0))
+K2 = 1/(1+exp(- crossprod(t(dt),arm_2))) # inverse logit transform of linear predictor
+K2 = vapply(K2, function(x) rbinom(1, 1, x), as.integer(1L))
+arm_3 <-  as.vector(c(-1,-5,1,10))
+K3 = 1/(1+exp(- crossprod(t(dt),arm_3)))
+K3 = vapply(K3, function(x) rbinom(1, 1, x), as.integer(1L))
+visitorReward <-  data.frame(K1,K2,K3)
+dt <- as.data.frame(dt)
+linucb_bandit_object_evaluation(dt,visitorReward)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{LOGITUCB}{LogitUCB algorithm}{LOGITUCB}
+%
+\begin{Description}\relax
+Control data in visitorReward with \code{\LinkA{bandit\_reward\_control}{bandit.Rul.reward.Rul.control}}
+Stop if something is wrong.
+\begin{itemize}
+ At each iteration
+\item Calculates the arm probabilities according to a logit regression of context in dt dataframe
+\item Choose the arm with the maximum upper bound (with alpha parameter)
+\item Receives a reward in visitorReward for the arm and associated iteration
+\item Updates the results matrix S.
+
+\end{itemize}
+
+Returns the calculation time.
+Review the estimated, actual coefficient for each arm.
+See also  \code{\LinkA{return\_real\_theta}{return.Rul.real.Rul.theta}},
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+LOGITUCB(dt, visitorReward, alpha = 1, K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of integer or numeric values
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{alpha}] Numeric value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item choice: choices of UCB,
+\item proba: probability of the chosen arms,
+\item time: time of cumputation,
+\item theta\_hat: coefficients estimated of each arm
+\item theta: real coefficients of each arm
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+size.tot = 1000
+set.seed(4649)                          # this makes the example exactly reproducible
+x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+x2 = runif(size.tot, min=0, max=10)
+x3 = runif(size.tot, min=0, max=10)
+x4 = runif(size.tot, min=0, max=10)
+dt = cbind(x1,x2,x3,x4)
+#arm reward
+arm_1 <-  as.vector(c(-1,9,-8,4))
+K1 = 1/(1+exp(- crossprod(t(dt),arm_1))) # inverse logit transform of linear predictor
+K1 = vapply(K1, function(x) rbinom(1, 1, x), as.integer(1L))
+arm_2 <-  as.vector(c(-1,2,1,0))
+K2 = 1/(1+exp(- crossprod(t(dt),arm_2))) # inverse logit transform of linear predictor
+K2 = vapply(K2, function(x) rbinom(1, 1, x), as.integer(1L))
+arm_3 <-  as.vector(c(-1,-5,1,10))
+K3 = 1/(1+exp(- crossprod(t(dt),arm_3)))
+K3 = vapply(K3, function(x) rbinom(1, 1, x), as.integer(1L))
+visitorReward <-  data.frame(K1,K2,K3)
+dt <- as.data.frame(dt)
+LOGITUCB(dt,visitorReward)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{logitucb\_bandit\_object\_evaluation}{logitucb\_bandit\_object\_evaluation}{logitucb.Rul.bandit.Rul.object.Rul.evaluation}
+%
+\begin{Description}\relax
+Run a \code{\LinkA{LOGIT}{LOGIT}} using visitorReward and dt values.
+Control data.
+Stop if something is wrong.
+After execution of logitucb\_bandit, calculates the cumulative regret
+associated with the choices made.
+Review the cumulative regret according iterations and an logitucb\_bandit object.
+See also \code{\LinkA{LOGIT}{LOGIT}}, \code{\LinkA{cumulativeRegret}{cumulativeRegret}}
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+logitucb_bandit_object_evaluation(dt, visitorReward, alpha = 1,
+  K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of integer or numeric values
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{alpha}] numerical value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item logitucb\_bandit\_alloc: logitucb bandit object ,
+\item cum\_reg\_logitucb\_bandit\_alloc: List numeric.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+size.tot = 1000
+set.seed(4649)                          # this makes the example exactly reproducible
+x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+x2 = runif(size.tot, min=0, max=10)
+x3 = runif(size.tot, min=0, max=10)
+x4 = runif(size.tot, min=0, max=10)
+dt = cbind(x1,x2,x3,x4)
+#arm reward
+arm_1 <-  as.vector(c(-1,9,-8,4))
+K1 = 1/(1+exp(- crossprod(t(dt),arm_1))) # inverse logit transform of linear predictor
+K1 = vapply(K1, function(x) rbinom(1, 1, x), as.integer(1L))
+arm_2 <-  as.vector(c(-1,2,1,0))
+K2 = 1/(1+exp(- crossprod(t(dt),arm_2))) # inverse logit transform of linear predictor
+K2 = vapply(K2, function(x) rbinom(1, 1, x), as.integer(1L))
+arm_3 <-  as.vector(c(-1,-5,1,10))
+K3 = 1/(1+exp(- crossprod(t(dt),arm_3)))
+K3 = vapply(K3, function(x) rbinom(1, 1, x), as.integer(1L))
+visitorReward <-  data.frame(K1,K2,K3)
+dt <- as.data.frame(dt)
+logitucb_bandit_object_evaluation(dt=dt,visitorReward)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{play\_arm}{Assign an arm to an item}{play.Rul.arm}
+%
+\begin{Description}\relax
+The variable arm represents the selected arm
+visitorReward is a dataframe of rewards
+iter is the current iteration
+S is the matrix of results for each arm (tests and empirical mean)
+In the matrix S :
+\begin{itemize}
+ Retrieves the reward associated with the iter instant in the reward dataframe
+\item Updates the average reward of the chosen arm with the reward obtained
+\item Adds a test to the selected arm (arm)
+\item Returns the updated S matrix
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+play_arm(iter, arm, S, visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{iter}] Integer value
+
+\item[\code{arm}] Integer value
+
+\item[\code{S}] Numeric matrix
+
+\item[\code{visitorReward}] Numeric matrix
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+S Numeric matrix
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(K1,K2) )
+## Number of arms
+K=2
+## Init the S Matrix
+S <- generate_Matrix_S(K)
+S
+## play arms uniformly
+for(i in 1:nrow(visitorReward)){
+S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+}
+## Results
+S
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{proba\_max\_For\_UCB}{Calculates, for each colonne of S (selected arm) an upper bound according to the Hoeffding inequality (dependent on the iter iteration). It is possible to adjust this bound via an alpha parameter (default alpha = 1). Returns a vector of calculated upper bounds}{proba.Rul.max.Rul.For.Rul.UCB}
+%
+\begin{Description}\relax
+Calculates, for each colonne of S (selected arm) an
+upper bound according to the Hoeffding inequality
+(dependent on the iter iteration).
+It is possible to adjust this bound via an
+alpha parameter (default alpha = 1).
+Returns a vector of calculated upper bounds
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+proba_max_For_UCB(S, iter, alpha = 1, K = ncol(S))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{S}] Numeric matrix
+
+\item[\code{iter}] Integer value
+
+\item[\code{alpha}] Numeric value (optional)
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Numeric vector
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(K1,K2) )
+## Number of arms
+K=2
+## Init the S Matrix
+S <- generate_Matrix_S(K)
+S
+## play arms uniformly
+for(i in 1:nrow(visitorReward)){
+S <- play_arm(i,arm=(i%%K+1),S,visitorReward)
+}
+## Results
+S
+proba_max_For_UCB(S=S,iter=i+1)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{regretValue}{Return regret of chosen arm}{regretValue}
+%
+\begin{Description}\relax
+Return for a given vector the difference between
+the highest value of reward and the reward obtained by the chosen arm.
+Can be equal of 0
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+regretValue(arm, vec_visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{arm}] Integer value
+
+\item[\code{vec\_visitorReward}] Numeric vector
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Numeric value
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 21, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#regret of arm 1 for the fist item
+regretValue(1,visitorReward[1,])
+#'#regret of arm 1 for the fist item
+regretValue(2,visitorReward[1,])
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{return\_real\_theta}{return\_real\_theta}{return.Rul.real.Rul.theta}
+%
+\begin{Description}\relax
+Return real theta from a rigide regression of context to arm's reward.
+Return coefficients of regression (except intercept)
+See also , \code{\LinkA{lm}{lm}}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+return_real_theta(dt, visitorReward, option = "linear")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dt}] Dataframe of context
+
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{option}] Option linear by default
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+theta\_hat: mean estimated of each arm
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+size.tot = 1000
+set.seed(4649)                          # this makes the example exactly reproducible
+x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
+x2 = runif(size.tot, min=0, max=10)
+x3 = runif(size.tot, min=0, max=10)
+x4 = runif(size.tot, min=0, max=10)
+dt = cbind(x1,x2,x3,x4)
+#arm reward
+arm_1 <-  as.vector(c(-1,9,-8,4))
+K1 = crossprod(t(dt),arm_1)
+arm_2 <-  as.vector(c(-1,2,1,0))
+K2 = crossprod(t(dt),arm_2)
+arm_3 <-  as.vector(c(-1,-5,1,10))
+K3 = crossprod(t(dt),arm_3)
+visitorReward <-  data.frame(K1,K2,K3)
+dt <- as.data.frame(dt)
+return_real_theta(dt,visitorReward)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{simpleRegret}{Return list of regret}{simpleRegret}
+%
+\begin{Description}\relax
+Return a list with obtained regret at each iterations
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+simpleRegret(choice, visitorReward)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{choice}] Integer list
+
+\item[\code{visitorReward}] dataframe of integer or numeric values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+List of numeric values
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rnorm(100, 30, .05)
+K2 <- rnorm(100, 21, .05)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Random choices
+choice <- sample(c(1,2), 100, replace = TRUE)
+simpleRegret(choice=choice,visitorReward=visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{thompson\_sampling}{thompson\_sampling}{thompson.Rul.sampling}
+%
+\begin{Description}\relax
+A thompson sampling (TS) bandit strategy implemented by sampling, in each round, averages from a posterior
+distribution  \code{\LinkA{condition\_For\_thompson\_sampling}{condition.Rul.For.Rul.thompson.Rul.sampling}}, and choosing the action that maximizes the expected reward given the
+sampled average. Conceptually, this means that the player instantiates their beliefs
+randomly in each round, and then acts optimally according to them.
+Control data in visitorReward with \code{\LinkA{is\_reward\_are\_boolean}{is.Rul.reward.Rul.are.Rul.boolean}}
+Stop if something is wrong.
+Generate a matrix to save the results (S).
+\begin{itemize}
+ At each iteration
+\item Sample an averages from a posterior in S for each arm (beta distribution with alpha and beta parameters)
+\item Choose the arm with the highest average
+\item Receives a reward in visitorReward for the arm and associated iteration
+\item Updates the results matrix S.
+
+\end{itemize}
+
+Returns the calculation time.
+Review the estimated, actual averages and number of choices for each arm.
+See also  \code{\LinkA{condition\_For\_thompson\_sampling}{condition.Rul.For.Rul.thompson.Rul.sampling}}, \code{\LinkA{generate\_Matrix\_S}{generate.Rul.Matrix.Rul.S}}, and \code{\LinkA{play\_arm}{play.Rul.arm}}.
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+thompson_sampling(visitorReward, K = ncol(visitorReward), alpha = 1,
+  beta = 1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+
+\item[\code{alpha}] Numeric value (optional)
+
+\item[\code{beta}] Numeric value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item S:numerical matrix of results ,
+\item choice: choices of TS,
+\item proba: probability of the chosen arms,
+\item time: time of cumputation,
+\item theta\_hat: mean estimated of each arm
+\item theta: real mean of each arm
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 uniform distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame( cbind(K1,K2) )
+thompson_sampling(visitorReward)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{thompson\_sampling\_bandit\_object\_evaluation}{thompson\_sampling\_bandit\_object\_evaluation}{thompson.Rul.sampling.Rul.bandit.Rul.object.Rul.evaluation}
+%
+\begin{Description}\relax
+Run the Thompson Sampling algorithm using visitorReward values with \code{\LinkA{thompson\_sampling}{thompson.Rul.sampling}} function.
+Stop if something is wrong.
+After execution of Thompson Sampling, calculates the cumulative regret
+associated with the choices maded.
+Review the cumulative regret according iterations and an thompson sampling object.
+See also \code{\LinkA{thompson\_sampling}{thompson.Rul.sampling}}, \code{\LinkA{cumulativeRegret}{cumulativeRegret}}
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+
+  thompson_sampling_bandit_object_evaluation(visitorReward = visitorReward,
+  K = ncol(visitorReward), alpha = 1, beta = 1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+
+\item[\code{alpha}] Numeric value (optional)
+
+\item[\code{beta}] Numeric value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item thompson\_sampling\_alloc: thompson\_sampling object ,
+\item cum\_reg\_ucb\_alloc: List numeric.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run Thompson Sampling algorithm with policy evaluation
+thompson_sampling_bandit_object_evaluation(visitorReward,alpha = 1, beta = 1 )
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{UCB}{UCB algorithm}{UCB}
+%
+\begin{Description}\relax
+Control data in visitorReward with \code{\LinkA{bandit\_reward\_control}{bandit.Rul.reward.Rul.control}}
+Stop if something is wrong.
+Generate a matrix to save the results (S).
+\begin{itemize}
+ At each iteration
+\item Calculates the arm probabilities
+\item Choose the arm with the maximum upper bound (with alpha parameter)
+\item Receives a reward in visitorReward for the arm and associated iteration
+\item Updates the results matrix S.
+
+\end{itemize}
+
+Returns the calculation time.
+Review the estimated, actual averages and number of choices for each arm.
+See also \code{\LinkA{condition\_For\_UCB}{condition.Rul.For.Rul.UCB}}, \code{\LinkA{generate\_Matrix\_SK}{generate.Rul.Matrix.Rul.SK}},
+\code{\LinkA{proba\_max\_For\_UCB}{proba.Rul.max.Rul.For.Rul.UCB}} and \code{\LinkA{play\_arm}{play.Rul.arm}}.
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+UCB(visitorReward, K = ncol(visitorReward), alpha = 1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+
+\item[\code{alpha}] Numeric value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item S:numerical matrix of results ,
+\item choice: choices of UCB,
+\item proba: probability of the chosen arms,
+\item time: time of cumputation,
+\item theta\_hat: mean estimated of each arm
+\item theta: real mean of each arm
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 10000 numbers from 2 binomial  distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run UCB algorithm
+ucb_alloc  <- UCB(visitorReward,alpha = 10)
+ucb_alloc$S
+barplot(table(ucb_alloc$choice),main = "Histogram of choices",xlab="arm")
+#Upper bound for arm 2 according iterations (red line is the real mean)
+plot(x=c(1:length(ucb_alloc$choice[ucb_alloc$choice==2])),
+  ucb_alloc$proba[ucb_alloc$choice==2],
+  type='l',xlab = 'Time',ylab = 'Upper bound of arm 2')
+  lines(c(1:length(ucb_alloc$choice[ucb_alloc$choice==2])),rep(mean(K2),length(ucb_alloc$choice[ucb_alloc$choice==2])),col="red")
+ucb_alloc$time
+ucb_alloc$theta_hat
+ucb_alloc$theta
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{ucb\_bandit\_object\_evaluation}{ucb\_bandit\_object\_evaluation}{ucb.Rul.bandit.Rul.object.Rul.evaluation}
+%
+\begin{Description}\relax
+Run the UCB algorithm using visitorReward values with \code{\LinkA{UCB}{UCB}} function.
+Stop if something is wrong.
+After execution of UCB, calculates the cumulative regret
+associated with the choices made.
+Review the cumulative regret according iterations and an ucb object.
+See also \code{\LinkA{UCB}{UCB}}, \code{\LinkA{cumulativeRegret}{cumulativeRegret}}
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+ucb_bandit_object_evaluation(visitorReward = visitorReward,
+  K = ncol(visitorReward), alpha)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+
+\item[\code{alpha}] Numeric value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item ucb\_alloc: ucb object ,
+\item cum\_reg\_ucb\_alloc: List numeric.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run UCB algorithm with policy evaluation
+ucb_bandit_object_evaluation(visitorReward,alpha = 1)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{uniform\_bandit}{Uniform algorithm}{uniform.Rul.bandit}
+%
+\begin{Description}\relax
+Control data in visitorReward with \code{\LinkA{bandit\_reward\_control}{bandit.Rul.reward.Rul.control}}
+Stop if something is wrong.
+Generate a matrix to save the results (S).
+\begin{itemize}
+ At each iteration
+\item Choose alternatively an arm
+\item Receives a reward in visitorReward for the arm and associated iteration
+\item Updates the results matrix S.
+
+\end{itemize}
+
+Returns the calculation time.
+Return the estimated and number of choices for each arm.
+See also  \code{\LinkA{generate\_Matrix\_SK}{generate.Rul.Matrix.Rul.SK}} and \code{\LinkA{play\_arm}{play.Rul.arm}}.
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+uniform_bandit(visitorReward, K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item S:numerical matrix of results ,
+\item choice: choices of UCB,
+\item time: time of cumputation,
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 10000 numbers from 2 binomial  distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run Uniform algorithm
+uniform_bandit_alloc  <- uniform_bandit(visitorReward)
+uniform_bandit_alloc$S
+uniform_bandit_alloc$time
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{uniform\_bandit\_object\_evaluation}{uniform\_bandit\_object\_evaluation}{uniform.Rul.bandit.Rul.object.Rul.evaluation}
+%
+\begin{Description}\relax
+Run a uniform allocation using visitorReward values with \code{\LinkA{uniform\_bandit}{uniform.Rul.bandit}} function.
+Stop if something is wrong.
+After execution of uniform\_bandit, calculates the cumulative regret
+associated with the choices made.
+Review the cumulative regret according iterations and an uniform\_bandit object.
+See also \code{\LinkA{uniform\_bandit}{uniform.Rul.bandit}}, \code{\LinkA{cumulativeRegret}{cumulativeRegret}}
+Require \code{\LinkA{tic}{tic}} and \code{\LinkA{toc}{toc}} from \code{\LinkA{tictoc}{tictoc}} library
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+uniform_bandit_object_evaluation(visitorReward = visitorReward,
+  K = ncol(visitorReward))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{visitorReward}] Dataframe of integer or numeric values
+
+\item[\code{K}] Integer value (optional)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\begin{itemize}
+ List of element:
+\item uniform\_bandit\_alloc: uniform\_bandit object ,
+\item cum\_reg\_uniform\_bandit\_alloc: List numeric.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Generates 1000 numbers from 2 binomial distributions
+set.seed(4434)
+K1 <- rbinom(1000, 1, 0.6)
+K2 <- rbinom(1000, 1, 0.7)
+## Define a dataframe of rewards
+visitorReward <- as.data.frame(cbind(K1,K2) )
+#Run uniform bandit allocation with policy evaluation
+uniform_bandit_object_evaluation(visitorReward)
+
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}
