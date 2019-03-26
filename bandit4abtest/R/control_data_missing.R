@@ -15,10 +15,10 @@
 #'K1 <- rnorm(100, 30, .05)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
-#'visitor_reward <- as.data.frame(cbind(K1,K2) )
+#'#visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
-#'ControlDataMissing(visitor_reward)
-#'visitor_reward[1,1]= NA
+#'#ControlDataMissing(visitor_reward)
+#'#visitor_reward[1,1]= NA
 #'## Control
 #'ControlDataMissing(visitor_reward)
 #'

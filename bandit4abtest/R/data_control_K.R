@@ -17,12 +17,12 @@
 #'## Define a dataframe of rewards
 #'visitor_reward <- as.data.frame(K1)
 #'## Control
-#'DataControlK(visitor_reward)
+#'#DataControlK(visitor_reward)
 #'K2 <- rnorm(100, 21, .05)
 #'## Define a dataframe of rewards
 #'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
-#'DataControlK(visitor_reward,K=3)
+#'#DataControlK(visitor_reward,K=3)
 #'## Control
 #'DataControlK(visitor_reward,K=2)
 #'
