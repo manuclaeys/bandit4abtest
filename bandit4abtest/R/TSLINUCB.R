@@ -46,11 +46,10 @@
 #'dt <- as.data.frame(dt)
 #'TSLINUCB(dt,visitor_reward)
 #'@import tictoc
+#'@import MASS
 #'@export
 #TSLINUCB
 TSLINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
-
-  library(MASS)
 
   #control data
   DataControlK(visitor_reward, K = K)
