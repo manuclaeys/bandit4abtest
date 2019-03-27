@@ -16,7 +16,8 @@
 #' typeof(ChangeDataTypeForCtree(dt=dt,visitor_reward=dt)$visitor_reward[,1])
 #'K1 <- sample(c(0,1),replace=TRUE,size= 100)
 #'visitor_reward <- as.data.frame(K1)
-#'typeof(ChangeDataTypeForCtree(dt=dt,visitor_reward=dt,is_reward_are_boolean=FALSE)$visitor_reward[,1])
+#'typeof(ChangeDataTypeForCtree(dt=dt,visitor_reward=dt,
+#'is_reward_are_boolean=FALSE)$visitor_reward[,1])
 #'@export
 ChangeDataTypeForCtree <- function(dt, is_reward_are_boolean=FALSE, visitor_reward) {
 

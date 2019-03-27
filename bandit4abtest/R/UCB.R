@@ -44,7 +44,8 @@
 #'plot(x=c(1:length(ucb_alloc$choice[ucb_alloc$choice==2])),
 #'   ucb_alloc$proba[ucb_alloc$choice==2],
 #'   type='l',xlab = 'Time',ylab = 'Upper bound of arm 2')
-#'   lines(c(1:length(ucb_alloc$choice[ucb_alloc$choice==2])),rep(mean(K2),length(ucb_alloc$choice[ucb_alloc$choice==2])),col="red")
+#'   lines(c(1:length(ucb_alloc$choice[ucb_alloc$choice==2])),rep(mean(K2),
+#'   length(ucb_alloc$choice[ucb_alloc$choice==2])),col="red")
 #'ucb_alloc$time
 #'ucb_alloc$theta_hat
 #'ucb_alloc$theta
