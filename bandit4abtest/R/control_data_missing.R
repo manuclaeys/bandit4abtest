@@ -18,9 +18,6 @@
 #'#visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
 #'#ControlDataMissing(visitor_reward)
-#'#visitor_reward[1,1]= NA
-#'## Control
-#'ControlDataMissing(visitor_reward)
 #'
 #'@export
 ControlDataMissing <- function(visitor_reward) {

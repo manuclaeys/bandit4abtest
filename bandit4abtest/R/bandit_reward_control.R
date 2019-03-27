@@ -16,12 +16,7 @@
 #'## Define a dataframe of rewards
 #'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
-#'BanditRewardControl(visitor_reward,K=3)
-#'## Control
 #'BanditRewardControl(visitor_reward,K=2)
-#'visitor_reward[1,1]= NA
-#'## Control
-#'BanditRewardControl(visitor_reward)
 #'
 #'@export
 BanditRewardControl <- function(visitor_reward, K = ncol(visitor_reward)) {

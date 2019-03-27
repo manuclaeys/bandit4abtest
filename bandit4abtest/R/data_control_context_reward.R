@@ -17,10 +17,6 @@
 #'## Define a dataframe of rewards
 #'visitor_reward <- as.data.frame(K1)
 #'## Define a dataframe of context
-#'c1 <- rnorm(50, 35, .05)
-#'dt <- as.data.frame(c1)
-#'## Control
-#'DataControlContextReward(dt=dt,visitor_reward=visitor_reward)
 #'c1 <- rnorm(100, 30, .05)
 #'dt <- as.data.frame(c1)
 #'DataControlContextReward(dt=dt,visitor_reward=visitor_reward)

@@ -11,11 +11,6 @@
 #'@examples
 #'## Generates 1000 numbers from 2 uniform distributions
 #'set.seed(4434)
-#'K1 <- rnorm(100, 30, .05)
-#'K2 <- rnorm(100, 35, .05)
-#'## Define a dataframe of rewards
-#'visitor_reward <- as.data.frame(cbind(K1,K2))
-#'IsRewardAreBoolean(visitor_reward)
 #'K1 <- rbinom(1000, 1, 0.6)
 #'K2 <- rbinom(1000, 1, 0.7)
 #'visitor_reward <- as.data.frame(cbind(K1,K2))

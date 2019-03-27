@@ -45,7 +45,7 @@
 #'@export
 #thompsonSamplingContextual_bandit object evaluation
 ThompsonSamplingContextualBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
-  thompsonSamplingContextual_bandit_alloc <- TSLINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K = K)
-  cum_reg_thompsonSamplingContextual_bandit_alloc <- CumulativeRegret(thompsonSamplingContextual_bandit_alloc$choice,visitor_reward)
-  return (list('thompsonSamplingContextual_bandit_alloc'=thompsonSamplingContextual_bandit_alloc ,'cum_reg_thompsonSamplingContextual_bandit_alloc'=cum_reg_thompsonSamplingContextual_bandit_alloc))
+  thompson_sampling_contextual_bandit_alloc <- TSLINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K = K)
+  cum_reg_thompson_sampling_contextual_bandit_alloc <- CumulativeRegret(thompson_sampling_contextual_bandit_alloc$choice,visitor_reward)
+  return (list('thompsonSamplingContextualBanditAlloc'=thompson_sampling_contextual_bandit_alloc ,'cumRegThompsonSamplingContextualBanditAlloc'=cum_reg_thompson_sampling_contextual_bandit_alloc))
 }

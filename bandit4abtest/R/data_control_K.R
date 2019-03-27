@@ -22,8 +22,6 @@
 #'## Define a dataframe of rewards
 #'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'## Control
-#'#DataControlK(visitor_reward,K=3)
-#'## Control
 #'DataControlK(visitor_reward,K=2)
 #'
 #'@export
