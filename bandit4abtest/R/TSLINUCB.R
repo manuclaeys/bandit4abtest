@@ -11,7 +11,7 @@
 #'Returns the calculation time.
 #'Review the estimated, actual coefficient for each arm.
 #'See also  \code{\link{ReturnRealTheta}},
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library and  \code{\link{mvrnorm}} from  \code{\link{MASS}} library.
+#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library and  \code{\link{mvrnorm}} from MASS library.
 #'
 #'@param dt Dataframe of integer or numeric values
 #'@param visitor_reward Dataframe of integer or numeric values

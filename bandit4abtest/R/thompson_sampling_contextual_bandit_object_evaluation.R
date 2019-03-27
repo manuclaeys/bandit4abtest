@@ -8,7 +8,7 @@
 #'Review the cumulative regret according iterations and an thompsonSamplingContextual_bandit object.
 #'See also \code{\link{TSLINUCB}}, \code{\link{CumulativeRegret}}
 #'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
-#'Require \code{\link{mvrnorm}} from  \code{\link{MASS}} library.
+#'Require \code{\link{mvrnorm}} from MASS library.
 #'
 #'@param dt Dataframe of integer or numeric values
 #'@param visitor_reward Dataframe of integer or numeric values
@@ -43,7 +43,7 @@
 #'dt <- as.data.frame(dt)
 #'ThompsonSamplingContextualBanditObjectEvaluation(dt=dt,visitor_reward)
 #'@export
-#thompsonSamplingContextual_bandit object evaluation
+#thompson_sampling_contextual_bandit object evaluation
 ThompsonSamplingContextualBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
   thompson_sampling_contextual_bandit_alloc <- TSLINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K = K)
   cum_reg_thompson_sampling_contextual_bandit_alloc <- CumulativeRegret(thompson_sampling_contextual_bandit_alloc$choice,visitor_reward)
