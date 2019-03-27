@@ -26,7 +26,7 @@
 #' @source \url{http://abtasty.com/}
 #' @examples
 #'  try(data(package = "bandit4abtest") )
-#'  load(abtest1)
+#'  data(abtest1)
 "abtest1"
 
 #' abtest2
@@ -57,5 +57,5 @@
 #' @source \url{http://abtasty.com/}
 #' @examples
 #'  try(data(package = "bandit4abtest") )
-#'  load(abtest2)
+#'  data(abtest2)
 "abtest2"
