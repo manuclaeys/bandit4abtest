@@ -109,7 +109,7 @@ LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
     rewards[i] = visitor_reward[i,as.integer(choices[i])]
 
     # update the input vector
-    A[,,as.integer(choices[i])] = A[,,as.integer(choices[i])]  + x_i %*% t(x_i)
+    A[,,as.integer(choices[i])] = A[,,as.integer(choices[i])]  + x_i %*% t(x_i) #covariance matrix
     b[as.integer(choices[i]),] = b[as.integer(choices[i]),] +  x_i * as.numeric(rewards[i])
 
 
