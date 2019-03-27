@@ -26,4 +26,6 @@ RoxygenNote: 6.1.1
 Depends: R (>= 2.10)
 Imports: 
     tictoc,
-    MASS
+    MASS,
+    stats,
+    graphics

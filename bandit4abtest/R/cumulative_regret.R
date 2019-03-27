@@ -19,6 +19,7 @@
 #'choice <- sample(c(1,2), 100, replace = TRUE)
 #'CumulativeRegret(choice=choice,visitor_reward=visitor_reward)
 #'
+#'@import graphics
 #'@export
 CumulativeRegret <- function(choice, visitor_reward) {
   regret <- SimpleRegret(as.vector(choice), visitor_reward)

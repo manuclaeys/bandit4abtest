@@ -35,6 +35,7 @@
 #'#Density
 #'plot(density( rbeta(100, 1 + S[1,1]*S[2,1], 1 + S[2,1] - S[1,1]*S[2,1])))
 #'plot(density( rbeta(100, 1 + S[1,2]*S[2,2], 1 + S[2,2] - S[1,2]*S[2,2])))
+#'@import stats
 #'@export
 ConditionForThompsonSampling <- function(S, K=ncol(S), alpha=1, beta=1) {
 

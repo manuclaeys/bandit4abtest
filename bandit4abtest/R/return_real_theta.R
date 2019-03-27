@@ -28,6 +28,7 @@
 #'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
 #'ReturnRealTheta(dt,visitor_reward)
+#'@import stats
 #'@export
 #
 ReturnRealTheta <- function(dt, visitor_reward, option="linear") {
