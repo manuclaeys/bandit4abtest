@@ -10,6 +10,13 @@ Authors@R: c(person("Emmanuelle", "Claeys", email = "claeys@unistra.fr", role = 
   person("Marin", "Brunel", email = "marin.brunel@epitech.eu", role = c("ctb")),
   person("Marc", "Gross", email = "marc.gross@epitech.eu", role = c("ctb")))
 Maintainer: Emmanuelle Claeys <claeys@unistra.fr>
+Author: Emmanuelle Claeys [aut, cre],
+  Pierre Gançarski [aut],
+  Myriam Maummy-Bertrand [aut],
+  Romain Laemmel [ctb],
+  Raymond Lim [ctb],
+  Marin Brunel [ctb],
+  Marc Gross [ctb]
 Description: Contains functions for improve traditionnal A/B test by methodes from bandit theory. 
     Includes the most common bandit algorithms and some new methods specific to A/B tests.
 License: GPL-2
