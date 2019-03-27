@@ -2,8 +2,14 @@ Package: bandit4abtest
 Type: Package
 Title: Package for apply dynamique allocation in A/B test
 Version: 0.1.0
-Author: Emmanuelle Claeys 
-Maintainer: Emmanuelle Claeys  <claeys@unistra.fr>
+Authors@R: c(person("Emmanuelle", "Claeys", email = "claeys@unistra.fr", role = c("aut", "cre")),
+  person("Pierre", "Gançarski", email = "gancarski@unistra.fr", role = c("aut")),
+  person("Myriam", "Maummy-Bertrand", email = "mmaumy@unistra.fr", role = c("aut")),
+  person("Romain", "Laemmel", email = "romain.laemmel@epitech.eu", role = c("ctb")),
+  person("Raymond", "Lim", email = "raymond.lim@epitech.eu", role = c("ctb")),
+  person("Marin", "Brunel", email = "marin.brunel@epitech.eu", role = c("ctb")),
+  person("Marc", "Gross", email = "marc.gross@epitech.eu", role = c("ctb")))
+Maintainer: Emmanuelle Claeys <claeys@unistra.fr>
 Description: Contains functions for improve traditionnal A/B test by methodes from bandit theory. 
     Includes the most common bandit algorithms and some new methods specific to A/B tests.
 License: GPL-2
