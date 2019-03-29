@@ -1,6 +1,6 @@
 Package: bandit4abtest
 Type: Package
-Title: Package for apply dynamique allocation in A/B test
+Title: Applied Dynamic Allocation in A/B Test
 Version: 0.1.0
 Authors@R: c(person("Emmanuelle", "Claeys", email = "claeys@unistra.fr", role = c("aut", "cre")),
   person("Pierre", "Gançarski", email = "gancarski@unistra.fr", role = c("aut")),
@@ -17,8 +17,10 @@ Author: Emmanuelle Claeys [aut, cre],
   Raymond Lim [ctb],
   Marin Brunel [ctb],
   Marc Gross [ctb]
-Description: Contains functions for improve traditionnal A/B test by methodes from bandit theory. 
-    Includes the most common bandit algorithms and some new methods specific to A/B tests.
+Description: Contains functions for improve traditional A/B test by methods from bandit theory. 
+    Includes the most common bandit algorithms and some new methods specific to A/B tests. 
+    Dynamic allocation optimization in A/B tests using classification-based preprocessing, Claeys, Emmanuelle and Gancarski, Pierre and Maumy-Bertrand, Myriam and Wassner, Hubert. 
+    Regression Tree for Bandits Models in A/B Testing, Claeys, Emmanuelle and Gancarski, Pierre and Maumy-Bertrand, Myriam and Wassner, Hubert.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
