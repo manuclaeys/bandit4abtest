@@ -43,7 +43,6 @@
 #'dt <- as.data.frame(dt)
 #'kernelucb(dt,visitor_reward,update_val= 100,K=ncol(visitorReward),delta=1,lambda=1,alpha=1)
 #'@import tictoc
-#'@import listdtr
 #'@export
 #kernelucb
 kernelucb  <- function(dt,visitor_reward,update_val= 100,K=ncol(visitor_reward),delta=1,lambda=1,alpha=1){

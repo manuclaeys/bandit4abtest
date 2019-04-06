@@ -46,14 +46,11 @@
 #'size.tot = 1000
 #'temp <- ctreeucb(dt,visitor_reward)
 #'@import tictoc
-#'@import partykit
 #'
 #'@export
 #ctreeucb
 ctreeucb <- function(dt,visitor_reward,K=ncol(visitor_reward), ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)){
 
-  library(partykit)
-  library(tictoc)
  # set.seed(4321)
 
   ### control ###

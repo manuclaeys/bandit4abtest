@@ -31,7 +31,6 @@ ctreeucb_parameters_control_default <- function(
   alpha=1,
   ctree_control_val=ctree_control()
 ){
-  library(partykit)
 
   return(list(learn_size = learn_size ,is_reward_are_boolean = is_reward_are_boolean , arm_for_learn= arm_for_learn,
               explanatory_variable =explanatory_variable,
