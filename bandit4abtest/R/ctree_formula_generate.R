@@ -35,7 +35,7 @@
 #'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K1',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
 #'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K2',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
 #'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K3',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
-
+#'@import partykit
 #'@export
 ctree_formula_generate <- function(dt, visitor_reward,arm_for_learn,explanatory_variable,learn_size,ctree_control_val){
 

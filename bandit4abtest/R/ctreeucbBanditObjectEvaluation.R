@@ -49,7 +49,7 @@
 #'visitor_reward <-  data.frame(K1,K2 )
 #'summary(visitor_reward)
 #'dt <- as.data.frame(cbind(x1,x2))
-#'controle_param = ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,learn_size=1500,  alpha=1, ctree_control_val= ctree_control(teststat = "quadratic"))
+#'controle_param = ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,learn_size=1500,  alpha=1, ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
 #'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,ctree_parameters_control = controle_param )
 
 #'#take data for online ab test for other algorithm
@@ -59,6 +59,7 @@
 #'visitor_reward.abtest <- visitor_reward[first:last,]
 #'#compare with linucb bandit
 #'linucb_bandit <- LinucbBanditObjectEvaluation(dt.abtest,visitor_reward.abtest)
+#'@import partykit
 #'@export
 #ctreeucb_bandit object evaluation
 ctreeucbBanditObjectEvaluation <- function(dt, visitor_reward, K=ncol(visitor_reward), ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)) {

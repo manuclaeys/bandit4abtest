@@ -34,6 +34,7 @@
 #'ytrue <- K1
 #'mean((ynew - K1) ^ 2)  # MSE
 #'plot(density((ynew - K1)))
+#'@import listdtr
 #'@export
 # update_model_for_KernelUCB
 update_model_for_KernelUCB  <- function(choice , M ,update_val){

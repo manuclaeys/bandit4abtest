@@ -19,7 +19,8 @@
 #'K1 <- sample(c(0,1),replace=TRUE,size= 100)
 #'visitor_reward <- as.data.frame(K1)
 #'ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward)
-#'ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,is_reward_are_boolean=TRUE,learn_size=200, explanatory_variable="c1", alpha=1, ctree_control_val= ctree_control(teststat = "quadratic"))
+#'ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,is_reward_are_boolean=TRUE,learn_size=200, explanatory_variable="c1", alpha=1, ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
+#'@import partykit
 #'@export
 ctreeucb_parameters_control_default <- function(
   dt,
