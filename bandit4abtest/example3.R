@@ -1,41 +1,53 @@
+df  =  read.csv2("/home/manue/Documents/manue/GitHub/R-CTree-UCB/bandit4abtest/data/movielens.data",sep=";",header = TRUE)
+df$X = NULL
+dt <- df[,1:19]
+visitorReward <- df[,c(20:24)]
 
+#multiply the dataset if Config 100_1OO
+n <- 2
+dt <- do.call("rbind", replicate(n, dt, simplify = FALSE))
+visitorReward  <- do.call("rbind", replicate(n, visitorReward, simplify = FALSE))
 
-####Configuration
-#Conf_30/70
-config <- "30_70"
-df <- abtest1
-#Conf_100/100
-config <- "100_100"
-df <-  abtest2
+###Statistics
+temp <-as.data.frame( c(visitorReward[,1] ,visitorReward[,2] ,visitorReward[,3] ,visitorReward[,4], visitorReward[,5] ) )
+temp$user <- "0"
+temp$user[1:9125] <- "A"
+temp$user[9125: 18250] <- "B"
+temp$user[18250:27375] <- "C"
+temp$user[27375:36500] <- "D"
+temp$user[36500:45625] <- "E"
 
+colnames(temp) <- c("valeur","variation")
 
+ajuste <- lm(temp$valeur ~ temp$variation)
+summary(ajuste)
+anova(ajuste)
 
+a1 <- aov(temp$valeur ~ temp$variation)
+posthoc <- TukeyHSD(x=a1, 'temp$variation', conf.level=0.95)
+posthoc
 
-
-df$langID <- as.factor(df$langID)
-df$countryID <- as.factor(df$countryID)
-
-
-listCategorial =c("countryID","langID","name","device","userAgent")
-listInteger  = c("latitude","longitude")
-
-#Results for each variation
-visitorReward <- df[,c("A","B")]
-
-#Items caracteristics
-dt <- df[, c(listCategorial,listInteger)]
-
+dt.old <- dt
 
 set.seed(1234)
 
 
+####CTREEUCBPARAMETER
+## - the size of the learning set is a percent of the all dataset nrow(dt)*0.3 or nrow(dt)*0.5
+#  - mincriterion parameter refers to 1 -risk error accepted  (0.99,0.95,0.90)
+#  - alpha refers to the dynamic allocation parameter (U.C.B)
+#  - arm_for_learn is the original varitation (names(visitorReward)[1] or names(visitorReward)[2] ...or  names(visitorReward)[5] )
+#  testtype and teststat is refer to type of test to build the tree (see the paper for more details)
+# and are not supposed to be modified#
 
+#Do not multiply the dataset if Config 30_70
+#Config 30_70
+learn_size = nrow(dt.old)*0.30
 
+#multiply the dataset if Config 100_100
+#Config 100_100
+#learn_size = nrow(dt.old)*0.5
 
-dt.old <- dt
-
-if(config  == "100_100" ) learn_size = 6216
-if(config  ==  "30_70"  ) learn_size = 1865
 
 ####CTREEUCBPARAMETER
 ## - the size of the learning set is already calculated according to the selected configuration (learn_size)
@@ -44,19 +56,19 @@ if(config  ==  "30_70"  ) learn_size = 1865
 #  - arm_for_learn is the original varitation (names(visitorReward)[1] or names(visitorReward)[2])
 #  testtype and teststat is refer to type of test to build the tree (see the paper for more details)
 # and are not supposed to be modified#
-
+library(partykit)
 
 ctreeucb_parameters_control <- ctreeucb_parameters_control_default(dt = dt.old,
-                                                             visitorReward ,
-                                                             learn_size = learn_size,
-                                                             alpha = 1,
-                                                             arm_for_learn = names(visitorReward)[1],
-                                                             is_reward_are_boolean = TRUE,
-                                                             ctree_control_val=ctree_control(
-                                                               mincriterion = 0.99,
-                                                               testtype = "Teststatistic",
-                                                               teststat = "quadratic",
-                                                               splitstat = c( "quadratic"))
+                                                                   visitorReward ,
+                                                                   learn_size = learn_size,
+                                                                   alpha = 1,
+                                                                   arm_for_learn = names(visitorReward)[1],
+                                                                   is_reward_are_boolean = FALSE,
+                                                                   ctree_control_val=ctree_control(
+                                                                     mincriterion = 0.95,
+                                                                     testtype = "Teststatistic",
+                                                                     teststat = "quadratic"
+                                                                     )
 )
 
 
@@ -64,9 +76,6 @@ my_ctree_ucb <- ctreeucbBanditObjectEvaluation(dt= dt.old,visitor_reward=visitor
 max(my_ctree_ucb$cum_reg_ctree)
 ###END CTREE UCB###
 
-###Data format###
-###Other algorithms require binary or continuous variables.
-dt <- transform_categorial_to_binary( listCategorial =listCategorial ,listInteger=listInteger, dt=dt)
 
 first <- my_ctree_ucb$ctreeucb_bandit_alloc$first_train_element
 last <- nrow(dt)
@@ -78,6 +87,7 @@ max(my_linucb_ucb$cum_reg_linucb)
 
 
 ### Kernel UCB ###
+dt <- sapply(dt,as.numeric)
 kernel_ucb <-  kernelucbBanditObjectEvaluation(dt=dt, visitor_reward=visitorReward)
 max(kernel_ucb$cum_reg_kernelucb)
 ### END Kernel UCB ###

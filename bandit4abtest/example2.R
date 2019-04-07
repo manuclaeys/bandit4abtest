@@ -1,41 +1,48 @@
 
+###Data format###
+df  =  read.table("/home/manue/Documents/manue/GitHub/R-CTree-UCB/bandit4abtest/data/adult.data", sep = ",")  # read text file
+df$V1 <- NULL
 
-####Configuration
-#Conf_30/70
-config <- "30_70"
-df <- abtest1
-#Conf_100/100
-config <- "100_100"
-df <-  abtest2
+listCategorial =c("V2","V4","V6","V7","V8","V9")
 
+listInteger  = c("V3","V5","V11","V12","V13")
 
 
-
-
-df$langID <- as.factor(df$langID)
-df$countryID <- as.factor(df$countryID)
-
-
-listCategorial =c("countryID","langID","name","device","userAgent")
-listInteger  = c("latitude","longitude")
-
-#Results for each variation
-visitorReward <- df[,c("A","B")]
-
-#Items caracteristics
+visitorReward <- as.data.frame(transform_categorial_to_binary( listCategorial = c("V15"), dt=df))
+for(i in 1:ncol(visitorReward)) visitorReward[,i] <- as.integer(visitorReward[,i])
+###
 dt <- df[, c(listCategorial,listInteger)]
+dt$V15 <- NULL
 
 
-set.seed(1234)
-
-
+#multiply the dataset (if Config 100_100)
+n <- 2
+dt <- do.call("rbind", replicate(n, dt, simplify = FALSE))
+visitorReward  <- do.call("rbind", replicate(n, visitorReward, simplify = FALSE))
 
 
 
 dt.old <- dt
 
-if(config  == "100_100" ) learn_size = 6216
-if(config  ==  "30_70"  ) learn_size = 1865
+set.seed(1234)
+
+
+####CTREEUCBPARAMETER
+## - the size of the learning set is a percent of the all dataset nrow(dt)*0.3 or nrow(dt)*0.5
+#  - mincriterion parameter refers to 1 -risk error accepted  (0.99,0.95,0.90)
+#  - alpha refers to the dynamic allocation parameter (U.C.B)
+#  - arm_for_learn is the original varitation (names(visitorReward)[1] or names(visitorReward)[2] ...or  names(visitorReward)[5] )
+#  testtype and teststat is refer to type of test to build the tree (see the paper for more details)
+# and are not supposed to be modified#
+
+#Do not multiply the dataset if Config 30_70
+#Config 30_70
+learn_size = nrow(dt.old)*0.30
+
+#multiply the dataset if Config 100_100
+#Config 100_100
+learn_size = nrow(dt.old)*0.5
+
 
 ####CTREEUCBPARAMETER
 ## - the size of the learning set is already calculated according to the selected configuration (learn_size)
@@ -47,16 +54,16 @@ if(config  ==  "30_70"  ) learn_size = 1865
 
 
 ctreeucb_parameters_control <- ctreeucb_parameters_control_default(dt = dt.old,
-                                                             visitorReward ,
-                                                             learn_size = learn_size,
-                                                             alpha = 1,
-                                                             arm_for_learn = names(visitorReward)[1],
-                                                             is_reward_are_boolean = TRUE,
-                                                             ctree_control_val=ctree_control(
-                                                               mincriterion = 0.99,
-                                                               testtype = "Teststatistic",
-                                                               teststat = "quadratic",
-                                                               splitstat = c( "quadratic"))
+                                                                   visitorReward ,
+                                                                   learn_size = learn_size,
+                                                                   alpha = 1,
+                                                                   arm_for_learn = names(visitorReward)[1],
+                                                                   is_reward_are_boolean = TRUE,
+                                                                   ctree_control_val=ctree_control(
+                                                                     mincriterion = 0.99,
+                                                                     testtype = "Teststatistic",
+                                                                     teststat = "quadratic",
+                                                                     splitstat = c( "quadratic"))
 )
 
 
