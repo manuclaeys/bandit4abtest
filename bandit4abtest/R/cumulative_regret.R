@@ -21,7 +21,7 @@
 #'
 #'@import graphics
 #'@export
-CumulativeRegret <- function(choice, visitor_reward) {
+cumulativeRegret <- function(choice, visitor_reward) {
   regret <- SimpleRegret(as.vector(choice), visitor_reward)
   plot(cumsum(regret), type='l', xlab="Time T", ylab="Cumulative regret")
   return (cumsum(regret))

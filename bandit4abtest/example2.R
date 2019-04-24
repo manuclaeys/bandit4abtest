@@ -44,6 +44,7 @@ learn_size = nrow(dt.old)*0.30
 learn_size = nrow(dt.old)*0.5
 
 
+
 ####CTREEUCBPARAMETER
 ## - the size of the learning set is already calculated according to the selected configuration (learn_size)
 #  - mincriterion parameter refers to 1 -risk error accepted  (0.99,0.95,0.90)
@@ -60,43 +61,45 @@ ctreeucb_parameters_control <- ctreeucb_parameters_control_default(dt = dt.old,
                                                                    arm_for_learn = names(visitorReward)[1],
                                                                    is_reward_are_boolean = TRUE,
                                                                    ctree_control_val=ctree_control(
-                                                                     mincriterion = 0.99,
-                                                                     testtype = "Teststatistic",
+                                                                     mincriterion = 0.95,
+                                                                     testtype = "Bonferroni",
                                                                      teststat = "quadratic",
                                                                      splitstat = c( "quadratic"))
 )
 
 
-my_ctree_ucb <- ctreeucbBanditObjectEvaluation(dt= dt.old,visitor_reward=visitorReward, ctree_parameters_control= ctreeucb_parameters_control)
+my_ctree_ucb <- ctreeucbBanditObjectEvaluation(dt= dt.old,visitor_reward=visitorReward, ctree_parameters_control= ctreeucb_parameters_control, average = TRUE)
 max(my_ctree_ucb$cum_reg_ctree)
 ###END CTREE UCB###
+
 
 ###Data format###
 ###Other algorithms require binary or continuous variables.
 dt <- transform_categorial_to_binary( listCategorial =listCategorial ,listInteger=listInteger, dt=dt)
-
+#colnames(dt) <- paste(rep("col",74),as.character(c(1:74)) ,sep="")
 first <- my_ctree_ucb$ctreeucb_bandit_alloc$first_train_element
 last <- nrow(dt)
 dt <- dt[first:last,]
+dt.reward <- dt.old[first:last,]
 visitorReward <- visitorReward[first:last,]
-my_linucb_ucb <- LinucbBanditObjectEvaluation(dt=dt, visitor_reward=visitorReward)
+my_linucb_ucb <- LinucbBanditObjectEvaluation(dt=dt, visitor_reward=visitorReward,average = TRUE, IsRewardAreBoolean = TRUE,dt.reward=dt.reward)
 max(my_linucb_ucb$cum_reg_linucb)
 ### END Lin UCB ###
 
 
 ### Kernel UCB ###
-kernel_ucb <-  kernelucbBanditObjectEvaluation(dt=dt, visitor_reward=visitorReward)
+kernel_ucb <-  kernelucbBanditObjectEvaluation(dt=dt, visitor_reward=visitorReward,average = TRUE, IsRewardAreBoolean = TRUE,dt.reward=dt.reward)
 max(kernel_ucb$cum_reg_kernelucb)
 ### END Kernel UCB ###
 
 ### Random ###
-unif_alloc <- uniform_bandit_object_evaluation(visitor_reward=visitorReward)
+unif_alloc <- uniform_bandit_object_evaluation(visitor_reward=visitorReward,average = TRUE, IsRewardAreBoolean = TRUE,dt.reward=dt.reward)
 max(unif_alloc$cum_reg_uniform_bandit_alloc)
 ### END RANDOM ###
 
 
 ### UCB ###
-ucb_alloc <-  UcbBanditObjectEvaluation(visitor_reward=visitorReward,alpha = 1)
+ucb_alloc <-  UcbBanditObjectEvaluation(visitor_reward=visitorReward,alpha = 1,average = TRUE, IsRewardAreBoolean = TRUE,dt.reward=dt.reward)
 max(ucb_alloc$cum_reg_ucb_alloc)
 ###END UCB###
 
@@ -125,7 +128,7 @@ ggplot(comp_reg, aes(c(1:nrow(comp_reg)), y = value, color = Algorithm)) +
 
 
 
-plot_cum_regret_for_each_subgroupe(my_ctree_ucb)
+plot_cum_regret_for_each_subgroupe(my_ctree_ucb, average = TRUE)
 
 
 #cumulative regret
@@ -135,5 +138,29 @@ max(ucb_alloc$cum_reg_ucb_alloc)
 max(kernel_ucb$cum_reg_kernelucb)
 max(unif_alloc$cum_reg_uniform_bandit_alloc)
 
+### PLOT  OF REWARD###
+my_ctree_ucb.reward <- reward_cumulative(my_ctree_ucb$ctreeucb_bandit_alloc$choice, visitor_reward = visitorReward)
+ucb_alloc.reward <- reward_cumulative(ucb_alloc$ucb_alloc$choice, visitor_reward = visitorReward)
+my_linucb_ucb.reward <- reward_cumulative(my_linucb_ucb$linucb_bandit_alloc$choice, visitor_reward = visitorReward)
+kernel_ucb.reward <- reward_cumulative(kernel_ucb$kernelucb_bandit_alloc$choice, visitor_reward = visitorReward)
+unif_alloc.reward <- reward_cumulative(unif_alloc$uniform_bandit_alloc$choice, visitor_reward = visitorReward)
 
+###PLOT WITH GGPLOT2 REWARD###
+library(ggplot2)
+
+comp_reward <- data.frame(cbind(my_ctree_ucb.reward,
+                                ucb_alloc.reward,
+                                my_linucb_ucb.reward,
+                                kernel_ucb.reward,
+                                unif_alloc.reward))
+
+
+ggplot(comp_reg, aes(c(1:nrow(comp_reward)), y = value, color = Algorithm)) +
+  geom_line(linetype="dashed",aes(y = my_ctree_ucb.reward, col = "Ctreeucb"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = ucb_alloc.reward, col = "UCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = my_linucb_ucb.reward, col = "LinUCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = kernel_ucb.reward, col = "KernelUCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = unif_alloc.reward, col = "Uniformm"),size = 0.5) +
+  xlab("Time") +
+  ylab("Reward")
 

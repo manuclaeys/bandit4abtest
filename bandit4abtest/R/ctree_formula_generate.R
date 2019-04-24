@@ -37,7 +37,7 @@
 #'ctree_formula_generate(dt, visitor_reward,arm_for_learn='K3',explanatory_variable=c('x1','x2','x3','x4'),learn_size=100,ctree_control_val=ctreeucb_control_val$ctree_control_val)
 #'@import partykit
 #'@export
-ctree_formula_generate <- function(dt, visitor_reward,arm_for_learn,explanatory_variable,learn_size,ctree_control_val){
+ctree_formula_generate <- function(dt, visitor_reward,arm_for_learn,explanatory_variable,learn_size,ctree_control_val,print=FALSE){
 
  # set.seed(1234)
   dt <- dt[1:learn_size,]
@@ -70,7 +70,7 @@ ctree_formula_generate <- function(dt, visitor_reward,arm_for_learn,explanatory_
 
   reg_tree <- ctree(formula = Formula , dt,control = ctree_control_val, na.action = na.exclude)
 
-  plot(reg_tree)
+ if(print==TRUE) plot(reg_tree)
 
   return(reg_tree)
 }

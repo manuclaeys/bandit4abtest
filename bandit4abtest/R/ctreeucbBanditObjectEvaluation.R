@@ -14,6 +14,7 @@
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param alpha numerical value (optional)
 #'@param K Integer value (optional)
+#'@param average Boolean value to evaluate the policy
 #'
 #'@return
 #' \itemize{ List of element:
@@ -51,6 +52,7 @@
 #'dt <- as.data.frame(cbind(x1,x2))
 #'controle_param = ctreeucb_parameters_control_default(dt=dt, visitor_reward=visitor_reward,learn_size=1500,  alpha=1, ctree_control_val= partykit::ctree_control(teststat = "quadratic"))
 #'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,ctree_parameters_control = controle_param )
+#'ctreeucb_bandit = ctreeucbBanditObjectEvaluation(dt=dt,visitor_reward,ctree_parameters_control = controle_param ,average = TRUE)
 
 #'#take data for online ab test for other algorithm
 #'first <-  ctreeucb_bandit$ctreeucb_bandit_alloc$first_train_element
@@ -62,8 +64,13 @@
 #'@import partykit
 #'@export
 #ctreeucb_bandit object evaluation
-ctreeucbBanditObjectEvaluation <- function(dt, visitor_reward, K=ncol(visitor_reward), ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)) {
+ctreeucbBanditObjectEvaluation <- function(dt, visitor_reward, K=ncol(visitor_reward), ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward),average = FALSE) {
   ctreeucb_bandit_alloc <- ctreeucb(dt,visitor_reward,K, ctree_parameters_control)
-  cum_reg_ctreeucb_bandit_alloc <- CumulativeRegret(ctreeucb_bandit_alloc$choice,visitor_reward[ctreeucb_bandit_alloc$first_train_element:nrow(visitor_reward),])
+  if(average == FALSE) cum_reg_ctreeucb_bandit_alloc <- cumulativeRegret(ctreeucb_bandit_alloc$choice,visitor_reward[ctreeucb_bandit_alloc$first_train_element:nrow(visitor_reward),])
+  if(average == TRUE) cum_reg_ctreeucb_bandit_alloc <-  cumulativeRegretAverage(choice = ctreeucb_bandit_alloc$choice,
+                                                                                visitor_reward= visitor_reward[ctreeucb_bandit_alloc$first_train_element:nrow(visitor_reward),],
+                                                                               dt= dt[ctreeucb_bandit_alloc$first_train_element:nrow(visitor_reward),],
+                                                                               IsRewardAreBoolean= ctree_parameters_control$is_reward_are_boolean,
+                                                                               explanatory_variable=ctree_parameters_control$explanatory_variable)
   return (list('ctreeucb_bandit_alloc'=ctreeucb_bandit_alloc ,'cum_reg_ctreeucb_bandit_alloc'=cum_reg_ctreeucb_bandit_alloc))
 }

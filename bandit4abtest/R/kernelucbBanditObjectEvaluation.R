@@ -42,10 +42,18 @@
 #'dt <- as.data.frame(dt)
 #'kernelucbBanditObjectEvaluation(dt=dt,visitor_reward)
 #'kernelucbBanditObjectEvaluation(dt=dt,visitor_reward,update_val= 0)
+#'kernelucbBanditObjectEvaluation(dt=dt,visitor_reward,average=TRUE, IsRewardAreBoolean = TRUE)
 #'@export
 #kernelucb_bandit object evaluation
-kernelucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),update_val= 100) {
+kernelucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),update_val= 100, average=FALSE, IsRewardAreBoolean=FALSE, dt.reward = dt, explanatory_variable = colnames(dt.reward)) {
   kernelucb_bandit_alloc <- kernelucb(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K = K,update_val= 100)
-  cum_reg_kernelucb_bandit_alloc <- CumulativeRegret(kernelucb_bandit_alloc$choice,visitor_reward)
+
+  if(average == FALSE) cum_reg_kernelucb_bandit_alloc <- cumulativeRegret(kernelucb_bandit_alloc$choice, visitor_reward)
+  if(average == TRUE) cum_reg_kernelucb_bandit_alloc <- cumulativeRegretAverage(kernelucb_bandit_alloc$choice,
+                                                                         visitor_reward = visitor_reward,
+                                                                         dt=dt.reward,
+                                                                         IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                         explanatory_variable=explanatory_variable)
+
   return (list('kernelucb_bandit_alloc'=kernelucb_bandit_alloc ,'cum_reg_kernelucb_bandit_alloc'=cum_reg_kernelucb_bandit_alloc))
 }

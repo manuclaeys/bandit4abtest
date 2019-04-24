@@ -11,6 +11,7 @@
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
+#'@param average Boolean values to define the cumulative regret evaluation (simple:FALSE, average:TRUE)
 #'
 #'@return
 #' \itemize{ List of element:
@@ -27,11 +28,18 @@
 #'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#Run UCB algorithm with policy evaluation
 #'UcbBanditObjectEvaluation(visitor_reward,alpha = 1)
-#'
+#'UcbBanditObjectEvaluation(visitor_reward,alpha = 1,average = TRUE,IsRewardAreBoolean = TRUE)
 #'@export
 #UCB object evaluation
-UcbBanditObjectEvaluation <- function(visitor_reward=visitor_reward ,K=ncol(visitor_reward), alpha) {
-  ucb_alloc <- UCB(visitor_reward, alpha = alpha, K=K)
-  cum_reg_ucb_alloc <- CumulativeRegret(ucb_alloc$choice, visitor_reward)
-  return (list('ucb_alloc'=ucb_alloc ,'cum_reg_ucb_alloc'=cum_reg_ucb_alloc))
+UcbBanditObjectEvaluation <- function(visitor_reward=visitor_reward ,K=ncol(visitor_reward), alpha=1,average = FALSE,IsRewardAreBoolean = FALSE,dt.reward=NA,explanatory_variable=colnames(dt.reward)) {
+  ucb_bandit_alloc <- UCB(visitor_reward, alpha = alpha, K=K)
+
+ if(average == FALSE) cum_reg_ucb_bandit_alloc <- cumulativeRegret(ucb_bandit_alloc$choice, visitor_reward)
+ if(average == TRUE) cum_reg_ucb_bandit_alloc <- cumulativeRegretAverage(ucb_bandit_alloc$choice,
+                                                                                      visitor_reward = visitor_reward,
+                                                                                      dt=dt.reward,
+                                                                                      IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                                      explanatory_variable=explanatory_variable)
+
+  return (list('ucb_alloc'=ucb_bandit_alloc ,'cum_reg_ucb_alloc'=cum_reg_ucb_bandit_alloc))
 }

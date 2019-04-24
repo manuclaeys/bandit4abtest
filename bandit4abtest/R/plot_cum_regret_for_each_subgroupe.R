@@ -28,7 +28,7 @@
 #'plot_cum_regret_for_each_subgroupe(temp)
 #'@export
 #plot_cum_regret_for_each_subgroupe
-plot_cum_regret_for_each_subgroupe <- function(ctree_ucb_object){
+plot_cum_regret_for_each_subgroupe <- function(ctree_ucb_object,average=FALSE){
 
 
   dt <- ctree_ucb_object$ctreeucb_bandit_alloc$data_context
@@ -43,7 +43,8 @@ plot_cum_regret_for_each_subgroupe <- function(ctree_ucb_object){
     temp_choice  <- dt[dt$groups == i,]$choice
 
     temp_visitor_reward <- visitorReward[dt$groups == i,]
-    temp_cum_reg <- CumulativeRegret(temp_choice,temp_visitor_reward)
+    if(average==FALSE) temp_cum_reg <- cumulativeRegret(temp_choice,temp_visitor_reward)
+    if(average==TRUE) temp_cum_reg <-  cumulativeRegretAverage(temp_choice,temp_visitor_reward)
     plot(temp_cum_reg, type ='l', ylab = paste("cumulative regret for subgroup ",i,sep = ""))
     temp_choice  <- NULL
     temp_visitor_reward   <- NULL

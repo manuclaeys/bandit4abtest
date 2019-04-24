@@ -43,8 +43,16 @@
 #'LogitucbBanditObjectEvaluation(dt=dt,visitor_reward)
 #'@export
 #logitucb_bandit object evaluation
-LogitucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
+LogitucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),average = FALSE,IsRewardAreBoolean = TRUE,explanatory_variable=colnames(dt)) {
   logitucb_bandit_alloc <- LOGITUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K = K)
-  cum_reg_logitucb_bandit_alloc <- CumulativeRegret(logitucb_bandit_alloc$choice,visitor_reward)
+
+  if(average == FALSE) cum_reg_logitucb_bandit_alloc <- cumulativeRegret(logitucb_bandit_alloc$choice, visitor_reward)
+  if(average == TRUE) cum_reg_logitucb_bandit_alloc <- cumulativeRegretAverage(logitucb_bandit_alloc$choice,
+                                                                             visitor_reward = visitor_reward,
+                                                                             dt=dt,
+                                                                             IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                             explanatory_variable=explanatory_variable)
+
+
   return (list('logitucb_bandit_alloc'=logitucb_bandit_alloc ,'cum_reg_logitucb_bandit_alloc'=cum_reg_logitucb_bandit_alloc))
 }

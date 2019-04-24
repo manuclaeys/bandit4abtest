@@ -42,10 +42,19 @@
 #'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
 #'ThompsonSamplingContextualBanditObjectEvaluation(dt=dt,visitor_reward)
+#'ThompsonSamplingContextualBanditObjectEvaluation(dt=dt,visitor_reward,average = TRUE)
 #'@export
 #thompson_sampling_contextual_bandit object evaluation
-ThompsonSamplingContextualBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
+ThompsonSamplingContextualBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),average = FALSE,IsRewardAreBoolean = TRUE,explanatory_variable=colnames(dt)) {
   thompson_sampling_contextual_bandit_alloc <- TSLINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K = K)
-  cum_reg_thompson_sampling_contextual_bandit_alloc <- CumulativeRegret(thompson_sampling_contextual_bandit_alloc$choice,visitor_reward)
+
+  if(average == FALSE) cum_reg_thompson_sampling_contextual_bandit_alloc <- cumulativeRegret(thompson_sampling_contextual_bandit_alloc$choice, visitor_reward)
+  if(average == TRUE) cum_reg_thompson_sampling_contextual_bandit_alloc <- cumulativeRegretAverage(thompson_sampling_contextual_bandit_alloc$choice,
+                                                                               visitor_reward = visitor_reward,
+                                                                               dt=dt,
+                                                                               IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                               explanatory_variable=explanatory_variable)
+
+
   return (list('thompsonSamplingContextualBanditAlloc'=thompson_sampling_contextual_bandit_alloc ,'cumRegThompsonSamplingContextualBanditAlloc'=cum_reg_thompson_sampling_contextual_bandit_alloc))
 }

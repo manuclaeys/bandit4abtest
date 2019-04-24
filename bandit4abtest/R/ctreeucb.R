@@ -73,7 +73,8 @@ ctreeucb <- function(dt,visitor_reward,K=ncol(visitor_reward), ctree_parameters_
                                        ctree_control_val = ctree_parameters_control$ctree_control_val,
                                        arm_for_learn = ctree_parameters_control$arm_for_learn,
                                        explanatory_variable= ctree_parameters_control$explanatory_variable,
-                                       learn_size = ctree_parameters_control$learn_size)
+                                       learn_size = ctree_parameters_control$learn_size,
+                                       print=TRUE)
   #return to regular data
   visitor_reward <- visitor_reward
 

@@ -28,11 +28,23 @@
 #'visitor_reward <- as.data.frame(cbind(K1,K2) )
 #'#Run Thompson Sampling algorithm with policy evaluation
 #'ThompsonSamplingBanditObjectEvaluation(visitor_reward,alpha = 1, beta = 1 )
-#'
+#'ThompsonSamplingBanditObjectEvaluation(visitor_reward= visitor_reward,alpha = 1, beta = 1 ,average = TRUE,IsRewardAreBoolean = TRUE)
+#'ThompsonSamplingBanditObjectEvaluation(visitor_reward= visitor_reward,alpha = 1, beta = 1 ,average = TRUE,IsRewardAreBoolean = TRUE,dt=dt)
 #'@export
 #thompson sampling object evaluation
-ThompsonSamplingBanditObjectEvaluation <- function(visitor_reward=visitor_reward, K=ncol(visitor_reward), alpha=1, beta=1) {
-  ThompsonSampling_alloc <- ThompsonSampling(visitor_reward, alpha = alpha, beta = beta, K = K)
-  cum_reg_ThompsonSampling_alloc <- CumulativeRegret(ThompsonSampling_alloc$choice, visitor_reward)
-  return (list('ThompsonSampling_alloc'=ThompsonSampling_alloc ,'cum_reg_ThompsonSampling_alloc'=cum_reg_ThompsonSampling_alloc))
+ThompsonSamplingBanditObjectEvaluation <- function(visitor_reward=visitor_reward, K=ncol(visitor_reward), alpha=1, beta=1,average = FALSE,IsRewardAreBoolean = TRUE,dt=NA,explanatory_variable=colnames(dt)) {
+  ThompsonSampling_bandit_alloc <- ThompsonSampling(visitor_reward, alpha = alpha, beta = beta, K = K)
+
+
+  if(average == FALSE) cum_reg_ThompsonSampling_bandit_alloc <- cumulativeRegret(ThompsonSampling_bandit_alloc$choice, visitor_reward)
+  if(average == TRUE) cum_reg_ThompsonSampling_bandit_alloc <- cumulativeRegretAverage(ThompsonSampling_bandit_alloc$choice,
+                                                                             visitor_reward = visitor_reward,
+                                                                             dt=dt,
+                                                                             IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                             explanatory_variable=explanatory_variable)
+
+
+
+
+  return (list('ThompsonSampling_alloc'=ThompsonSampling_bandit_alloc ,'cum_reg_ThompsonSampling_alloc'=cum_reg_ThompsonSampling_bandit_alloc))
 }

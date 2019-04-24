@@ -41,10 +41,19 @@
 #'visitor_reward <-  data.frame(K1,K2,K3)
 #'dt <- as.data.frame(dt)
 #'LinucbBanditObjectEvaluation(dt,visitor_reward)
+#'LinucbBanditObjectEvaluation(dt,visitor_reward,average = TRUE,IsRewardAreBoolean = TRUE)
 #'@export
 #linucb_bandit object evaluation
-LinucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
+LinucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),average = FALSE,IsRewardAreBoolean = FALSE,dt.reward = dt ,explanatory_variable=colnames(dt.reward)) {
   linucb_bandit_alloc <- LINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K=K)
-  cum_reg_linucb_bandit_alloc <- CumulativeRegret(linucb_bandit_alloc$choice,visitor_reward)
+
+  if(average == FALSE) cum_reg_linucb_bandit_alloc <- cumulativeRegret(linucb_bandit_alloc$choice, visitor_reward)
+  if(average == TRUE) cum_reg_linucb_bandit_alloc <- cumulativeRegretAverage(linucb_bandit_alloc$choice,
+                                                                                visitor_reward = visitor_reward,
+                                                                                dt=dt.reward,
+                                                                                IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                                explanatory_variable=explanatory_variable)
+
+
   return (list('linucb_bandit_alloc'=linucb_bandit_alloc ,'cum_reg_linucb_bandit_alloc'=cum_reg_linucb_bandit_alloc))
 }
