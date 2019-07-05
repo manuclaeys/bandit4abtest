@@ -48,7 +48,7 @@
 #'@import tictoc
 #'@export
 #LINUCB
-LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
+LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),IsRewardAreBoolean = FALSE) {
 
   #control data
   DataControlK(visitor_reward, K = K)
@@ -117,7 +117,11 @@ LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
   time <- toc()
 
   #return real theta from a rigide regression
-  th <- ReturnRealTheta(dt=dt,visitor_reward=visitor_reward)
+ if(IsRewardAreBoolean == FALSE) th <- ReturnRealTheta(dt=dt,visitor_reward=visitor_reward, option = "linear")
+
+
+  #return real theta from a logit regression
+  if(IsRewardAreBoolean == TRUE) th <- ReturnRealTheta(dt=dt,visitor_reward=visitor_reward, option = "linear")
 
   #return  data , models, groups and results
   return (list('proba' = unlist(proba),'theta_hat'=th_hat,'theta'=th,'choice'=unlist(choices),'time'=(time$toc - time$tic)))

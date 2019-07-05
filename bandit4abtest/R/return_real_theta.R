@@ -31,7 +31,7 @@
 #'@import stats
 #'@export
 #
-ReturnRealTheta <- function(dt, visitor_reward, option="linear") {
+ReturnRealTheta <- function(dt, visitor_reward,option="linear") {
 
   K <- ncol(visitor_reward)
   n_f <- ncol(dt)
@@ -41,7 +41,7 @@ ReturnRealTheta <- function(dt, visitor_reward, option="linear") {
   rownames(th) <- colnames(visitor_reward)
 
   #tempory variable
-  temp <- dt
+  temp <- as.data.frame(dt)
   if (option=="linear") {
     for (i in 1:K) {
       temp$prediction <- visitor_reward[,i]

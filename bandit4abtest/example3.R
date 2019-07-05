@@ -45,7 +45,7 @@ set.seed(1234)
 
 #Do not multiply the dataset if Config 30_70
 #Config 30_70
-#learn_size = nrow(dt.old)*0.30
+learn_size = nrow(dt.old)*0.30
 
 #multiply the dataset if Config 100_100
 #Config 100_100

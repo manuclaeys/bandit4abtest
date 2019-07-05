@@ -47,7 +47,7 @@
 LinucbBanditObjectEvaluation <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),average = FALSE,IsRewardAreBoolean = FALSE,dt.reward = dt ,explanatory_variable=colnames(dt.reward)) {
   linucb_bandit_alloc <- LINUCB(dt=dt, visitor_reward=visitor_reward, alpha=alpha, K=K)
 
-  if(average == FALSE) cum_reg_linucb_bandit_alloc <- cumulativeRegret(linucb_bandit_alloc$choice, visitor_reward)
+  if(average == FALSE) cum_reg_linucb_bandit_alloc <- cumulativeRegret(linucb_bandit_alloc$choice, visitor_reward,IsRewardAreBoolean = IsRewardAreBoolean )
   if(average == TRUE) cum_reg_linucb_bandit_alloc <- cumulativeRegretAverage(linucb_bandit_alloc$choice,
                                                                                 visitor_reward = visitor_reward,
                                                                                 dt=dt.reward,
