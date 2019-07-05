@@ -175,8 +175,14 @@ kernelucb  <- function(dt,visitor_reward,update_val= 100,K=ncol(visitor_reward),
       p[j]       = a_upper_ci      # top CI
     }
 
+    set.seed(1234)
     # choose the highest,
-    choices[i] =  which.max(p)
+    if( anyNA(p) == FALSE  ){choices[i] =  which.max(p)}else{
+
+      #ramdom split
+      message(paste("random  sampling in kernelucb",i,sep=""))
+      choices[i]= sample(c(1:K),1)  }
+
     #   message(p)
     #   message(choices[i])
 

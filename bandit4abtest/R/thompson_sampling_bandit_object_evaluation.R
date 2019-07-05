@@ -6,12 +6,14 @@
 #'associated with the choices maded.
 #'Review the cumulative regret according iterations and an thompson sampling object.
 #'See also \code{\link{ThompsonSampling}}, \code{\link{CumulativeRegret}}
-#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library
+#'Require \code{\link{tic}} and \code{\link{toc}} from \code{\link{tictoc}} library.
+#'Average option implies a regret based on conditional inference tree model.
 #'
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param alpha Numeric value (optional)
 #'@param beta Numeric value (optional)
+#'@param average Boolean value (optional)
 #'
 #'@return
 #' \itemize{ List of element:
@@ -29,7 +31,6 @@
 #'#Run Thompson Sampling algorithm with policy evaluation
 #'ThompsonSamplingBanditObjectEvaluation(visitor_reward,alpha = 1, beta = 1 )
 #'ThompsonSamplingBanditObjectEvaluation(visitor_reward= visitor_reward,alpha = 1, beta = 1 ,average = TRUE,IsRewardAreBoolean = TRUE)
-#'ThompsonSamplingBanditObjectEvaluation(visitor_reward= visitor_reward,alpha = 1, beta = 1 ,average = TRUE,IsRewardAreBoolean = TRUE,dt=dt)
 #'@export
 #thompson sampling object evaluation
 ThompsonSamplingBanditObjectEvaluation <- function(visitor_reward=visitor_reward, K=ncol(visitor_reward), alpha=1, beta=1,average = FALSE,IsRewardAreBoolean = TRUE,dt=NA,explanatory_variable=colnames(dt)) {

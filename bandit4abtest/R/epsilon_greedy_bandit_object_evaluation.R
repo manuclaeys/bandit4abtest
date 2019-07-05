@@ -11,6 +11,7 @@
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
 #'@param epsilon Numeric value (optional)
+#'@param average Boolean value (optional)
 #'
 #'@return
 #' \itemize{ List of element:
@@ -30,8 +31,18 @@
 #'
 #'@export
 #EpsilonGreedy object evaluation
-EpsilonGreedyBanditObjectEvaluation <- function(visitor_reward=visitor_reward, K=ncol(visitor_reward), epsilon=0.25) {
+EpsilonGreedyBanditObjectEvaluation <- function(visitor_reward=visitor_reward, K=ncol(visitor_reward), epsilon=0.25,average = FALSE,IsRewardAreBoolean = TRUE,dt=NA,explanatory_variable=colnames(dt) ) {
   epsilon_greedy_alloc <- EpsilonGreedy(visitor_reward, epsilon=epsilon, K=K)
-  cum_reg_epsilon_greedy_alloc  <- CumulativeRegret(epsilon_greedy_alloc$choice,visitor_reward)
+
+  if(average == FALSE) cum_reg_epsilon_greedy_alloc  <- cumulativeRegret(epsilon_greedy_alloc$choice,visitor_reward)
+  if(average == TRUE) cum_reg_epsilon_greedy_alloc  <- cumulativeRegretAverage(epsilon_greedy_alloc$choice,
+                                                                                       visitor_reward = visitor_reward,
+                                                                                       dt=dt,
+                                                                                       IsRewardAreBoolean=IsRewardAreBoolean,
+                                                                                       explanatory_variable=explanatory_variable)
+
+
+
+
   return(list('epsilon_greedy_alloc'=epsilon_greedy_alloc ,'cum_reg_epsilon_greedy_alloc'=cum_reg_epsilon_greedy_alloc))
 }
