@@ -1,4 +1,5 @@
 # R-CTree-UCB
 R package CTree-UBC algorithm
 
-Everything will come soon in this README.md
+
+==> New version on https://github.com/manuclaeys/bandit4abtest
