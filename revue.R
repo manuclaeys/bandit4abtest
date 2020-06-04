@@ -219,7 +219,7 @@ cum_reg_ucb_alloc  <- cumulativeRegret(ucb_alloc$choice, visitor_reward.abtest)
 ############ Epsilon greedy ######################
 
 epsilonGreedy_alloc <- EpsilonGreedy( visitor_reward.abtest,epsilon  = 0.05)
-cum_reg_epsilonGreedy_alloc  <- cumulativeRegretAverage(epsilonGreedy_alloc$choice,visitor_reward.abtest)
+cum_reg_epsilonGreedy_alloc  <- cumulativeRegret(epsilonGreedy_alloc$choice,visitor_reward.abtest)
 
 
 
@@ -256,8 +256,9 @@ ggplot(comp_reg, aes(c(1:nrow(comp_reg)), y = value, color = Algorithm)) +
 
 set.seed(1234)
 ####Data generate
-temp <- load("/home/manue/Documents/manue/GitHub/R-CTree-UCB/bandit4abtest/data/abtest3.rda")
-temp <- as.data.frame(read.csv2(temp,sep=','))
+temp <- paste(getwd(),"/data/abtest3.rda",sep="")
+load(temp)
+temp <- data3
 
 ##Formating
 temp$value <-as.numeric( as.character(temp$value) )
@@ -287,8 +288,8 @@ for(i in 1:nrow(dt)){
 }
 
 
-##### Remplacement en mode mean
-library(bandit4abtest)
+##### Regret based on conditional means ###
+
 library(partykit)
 #Regression
 ctree_models <- c()
@@ -327,8 +328,7 @@ dt$B.pred <- predict(ctree_models[[2]],dt)
 rm(list=ls()[! ls() %in% c("dt")])
 df <- dt
 
-library(bandit4abtest)
-library(partykit)
+
 ####Configuration
 #Conf_30/70
 config <- "30_70"
