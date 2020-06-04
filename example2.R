@@ -1,6 +1,8 @@
-
+#Test with Adult UCI database
 ###Data format###
-df  =  read.table("/home/manue/Documents/manue/GitHub/R-CTree-UCB/bandit4abtest/data/adult.data", sep = ",")  # read text file
+temp <- paste(getwd(),"/data/adult.data",sep="")
+df <- read.table(temp)
+
 df$V1 <- NULL
 
 listCategorial =c("V2","V4","V6","V7","V8","V9")
