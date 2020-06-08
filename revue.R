@@ -1,8 +1,8 @@
 #Install from github
 #install.packages("devtools")
 library(devtools)
-install_github("https://github.com/R-workshop-strasbourg/bandit4abtest/tree/master/bandit4abtest")
-
+#install_github("https://github.com/R-workshop-strasbourg/bandit4abtest/tree/master/bandit4abtest")
+install_github("https://github.com/manuclaeys/bandit4abtest")
 
 ##Poster demo
 
@@ -114,7 +114,7 @@ cum_reg_ucb_alloc  <- cumulativeRegret(ucb_alloc$choice, visitor_reward)
 ############ Epsilon greedy ######################
 
 epsilonGreedy_alloc <- EpsilonGreedy( visitor_reward,epsilon  = 0.05)
-cum_reg_epsilonGreedy_alloc  <- cumulativeRegretAverage(epsilonGreedy_alloc$choice,visitor_reward)
+cum_reg_epsilonGreedy_alloc  <- cumulativeRegret(epsilonGreedy_alloc$choice,visitor_reward)
 
 
 
