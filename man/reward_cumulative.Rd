@@ -15,7 +15,7 @@ reward_cumulative(choice, visitor_reward)
 List of numeric values
 }
 \description{
-Return a list with cumulative rewards at each iterations
+Return a list with cumulative rewards at each iterations. Can be used for rejection samplig method.
 }
 \examples{
 ##### Pairewise #####

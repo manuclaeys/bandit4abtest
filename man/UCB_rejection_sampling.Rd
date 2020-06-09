@@ -52,5 +52,5 @@ temp_list <- sample(1:nrow(visitor_reward), 500, replace = FALSE, prob = NULL)
 visitor_reward$K1[temp_list] <- NA
 visitor_reward$K2[-temp_list] <- NA
 #run ucb on missing data
-ucb_alloc  <- UCB_rejection_sampling(visitor_reward,alpha = 10)
+ucb_rejection_sampling_alloc  <- UCB_rejection_sampling(visitor_reward,alpha = 10)
 }

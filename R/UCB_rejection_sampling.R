@@ -41,7 +41,7 @@
 #'visitor_reward$K1[temp_list] <- NA
 #'visitor_reward$K2[-temp_list] <- NA
 #'#run ucb on missing data
-#'ucb_alloc  <- UCB_rejection_sampling(visitor_reward,alpha = 10)
+#'ucb_rejection_sampling_alloc  <- UCB_rejection_sampling(visitor_reward,alpha = 10)
 #'@import tictoc
 #'@export
 UCB_rejection_sampling <- function(visitorReward, K=ncol(visitorReward) , alpha = 1){
@@ -70,7 +70,7 @@ UCB_rejection_sampling <- function(visitorReward, K=ncol(visitorReward) , alpha 
     ### le bon choix
     if(is.na(visitorReward[i,temp_i])==FALSE){
 
-      choice[temp_i] =  temp_i
+      choice[i] =  temp_i
       ###Si choix réel
       # see what kind of result we get
       rewards[temp_i] = visitorReward[i,temp_i]
@@ -79,6 +79,8 @@ UCB_rejection_sampling <- function(visitorReward, K=ncol(visitorReward) , alpha 
       S <- PlayArm(iter=i,arm=temp_i,S,visitorReward)
       proba[temp_i] <-  max(ProbaMaxForUCB(S=S, iter=temp_i, alpha=alpha, K))
       temp_i = temp_i +1
+    }else{
+      choice[i] = NA
     }
 
 

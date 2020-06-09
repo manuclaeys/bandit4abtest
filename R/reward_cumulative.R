@@ -1,6 +1,6 @@
 #'Return list of cumulative reward
 #'
-#'Return a list with cumulative rewards at each iterations
+#'Return a list with cumulative rewards at each iterations. Can be used for rejection samplig method.
 #'
 #'@param choice  Integer list
 #'@param visitor_reward dataframe of integer or numeric values
@@ -42,10 +42,24 @@
 #'@export
 reward_cumulative <- function(choice, visitor_reward){
 
+  if(anyNA(choice)==FALSE){
   reward.evolutive <- c()
- for(i in 1:nrow(visitor_reward)) reward.evolutive[i] <- visitor_reward[i,choice[i]]
-
+    for(i in 1:nrow(visitor_reward)) reward.evolutive[i] <- visitor_reward[i,choice[i]]
   return(cumsum(reward.evolutive))
+
+  }else{
+    reward.evolutive <- c()
+    j=1
+    for(i in 1:nrow(visitor_reward)){
+     if(is.na(choice[i])==FALSE){
+       reward.evolutive[j] <- visitor_reward[i,choice[i]]
+       j=j+1
+     }
+    }
+    return(cumsum(reward.evolutive))
+  }
+
+
 }
 
 
