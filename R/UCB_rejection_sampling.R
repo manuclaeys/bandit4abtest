@@ -48,7 +48,7 @@ UCB_rejection_sampling <- function(visitorReward, K=ncol(visitorReward) , alpha 
 
 
   #data formating
-  visitor_reward <- as.matrix(visitor_reward)
+  visitorReward <- as.matrix(visitorReward)
 
   #keep list of choice
   #keep list of choice
@@ -125,7 +125,7 @@ UCB_rejection_sampling <- function(visitorReward, K=ncol(visitorReward) , alpha 
   message("th real")
   message(th)
 
-  message(paste('number of used items', sum(ucb_alloc$S[2,1],ucb_alloc$S[2,2])),', number of excludes items :',(nrow(visitorReward) - sum(ucb_alloc$S[2,1],ucb_alloc$S[2,2])), sep= " " )
+  message(paste('number of used items', sum(S[2,1],S[2,2])),', number of excluded items :',(nrow(visitorReward) - sum(S[2,1],S[2,2])), sep= " " )
 
   return (list('S'=S,'choice'= choice,'proba' = proba,'time'=(time$toc - time$tic),'theta_hat'=th_hat,'theta'=th))
 

@@ -9,11 +9,11 @@ install_github("https://github.com/manuclaeys/bandit4abtest")
 library(bandit4abtest)
 
 set.seed(4434)
-V1 <- rbinom(1000, 1, 0.6)  # Generates 5000 numbers from a uniform distribution with mean 0.75
-V2 <- rbinom(1000, 1, 0.7)
-V3 <- rbinom(1000, 1, 0.5)
-V4 <- rbinom(1000, 1, 0.3)
-V5 <- rbinom(1000, 1, 0.9)
+V1 <- rbinom(5000, 1, 0.6)  # Generates 5000 numbers from a uniform distribution with mean 0.75
+V2 <- rbinom(5000, 1, 0.7)
+V3 <- rbinom(5000, 1, 0.5)
+V4 <- rbinom(5000, 1, 0.3)
+V5 <- rbinom(5000, 1, 0.9)
 
 visitorReward <- as.data.frame( cbind(V1,V2,V3,V4,V5) )
 
@@ -68,7 +68,87 @@ ggplot(comp_reg, aes(c(1:nrow(comp_reg)), y = value, color = Algorithm)) +
 
 #################
 rm(list = ls())
-#Contextual
+#Contextual with continus reward
+size.tot = 10000
+set.seed(4649)                          # this makes the example exactly reproducible
+x1 = runif(size.tot, min=0, max=10)          # you have 2, largely uncorrelated predictors
+x2 = runif(size.tot, min=0, max=10)
+
+dt = cbind(x1,x2)
+#arm reward
+arm_1 <-  as.vector(c(0,0.5))
+K1 = crossprod(t(dt),arm_1) + runif(size.tot, min=-1, max=1)    #  linear predictor
+summary(K1)
+
+arm_2 <-  as.vector(c(0.5,0))
+K2 = crossprod(t(dt),arm_2) + runif(size.tot, min=-1, max=1)
+summary(K2)
+
+visitor_reward <-  data.frame(K1,K2)
+dt <- as.data.frame(dt)
+
+
+linucb_contextual_alloc <- LINUCB(dt,visitor_reward )
+cum_reg_linucb_contextual_alloc <- cumulativeRegretAverage(linucb_contextual_alloc$choice,visitor_reward,dt = dt)
+
+kernelucb_contextual_alloc <- kernelucb(dt, visitor_reward, update_val = 500)
+cum_reg_kernelucb_contextual_alloc <- cumulativeRegretAverage(kernelucb_contextual_alloc$choice,visitor_reward,dt=dt)
+max(cum_reg_kernelucb_contextual_alloc)
+
+random_alloc <- UniformBandit(visitor_reward)
+cum_reg_random_alloc <- cumulativeRegretAverage(random_alloc$choice,visitor_reward,dt=dt)
+
+############ Algorithm UCB ############
+
+ucb_alloc  <- UCB( visitor_reward,alpha = 1)
+cum_reg_ucb_alloc  <- cumulativeRegretAverage(ucb_alloc$choice, visitor_reward,dt=dt)
+
+
+############ Epsilon greedy ######################
+
+epsilonGreedy_alloc <- EpsilonGreedy( visitor_reward,epsilon  = 0.05)
+cum_reg_epsilonGreedy_alloc  <- cumulativeRegretAverage(epsilonGreedy_alloc$choice,visitor_reward,dt=dt)
+
+
+
+###PLOT WITH GGPLOT2 REGRET###
+
+library(ggplot2)
+
+comp_reg <- data.frame(cbind(cum_reg_linucb_contextual_alloc,
+                             cum_reg_kernelucb_contextual_alloc,
+                             cum_reg_random_alloc,
+                             cum_reg_ucb_alloc,
+                             cum_reg_epsilonGreedy_alloc))
+
+
+
+ggplot(comp_reg, aes(c(1:nrow(comp_reg)), y = value, color = Algorithm)) +
+  geom_line(linetype="dashed",aes(y = cum_reg_ucb_alloc, col = "UCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = cum_reg_epsilonGreedy_alloc, col = "Epsilon Greedy"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = cum_reg_random_alloc, col = "Random"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = cum_reg_linucb_contextual_alloc, col = "LINUCB"),size = 0.5) +
+  geom_line(linetype="dashed",aes(y = cum_reg_kernelucb_contextual_alloc, col = "KernelUCB"),size = 0.5) +
+  scale_colour_manual(values =  c("UCB"="brown","Epsilon Greedy"="orange","Thompson Sampling"="green","Random"="black", "Contextual TS"="dark green", "LINUCB"="blue","KernelUCB"= "purple"))+
+  xlab("Time T") +
+  ylab("Cumulative regret")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#################
+rm(list = ls())
+#Contextual with Binary reward
 size.tot = 10000
 set.seed(4649)                          # this makes the example exactly reproducible
 x1 = runif(size.tot, min=0, max=10)          # you have 4, largely uncorrelated predictors
@@ -103,25 +183,25 @@ cum_reg_kernelucb_contextual_alloc <- cumulativeRegretAverage(kernelucb_contextu
 max(cum_reg_kernelucb_contextual_alloc)
 
 random_alloc <- UniformBandit(visitor_reward)
-cum_reg_random_alloc <- cumulativeRegret(random_alloc$choice,visitor_reward)
+cum_reg_random_alloc <- cumulativeRegretAverage(random_alloc$choice,visitor_reward,dt=dt)
 
 ############ Algorithm UCB ############
 
 ucb_alloc  <- UCB( visitor_reward,alpha = 1)
-cum_reg_ucb_alloc  <- cumulativeRegret(ucb_alloc$choice, visitor_reward)
+cum_reg_ucb_alloc  <- cumulativeRegretAverage(ucb_alloc$choice, visitor_reward,dt=dt)
 
 
 ############ Epsilon greedy ######################
 
 epsilonGreedy_alloc <- EpsilonGreedy( visitor_reward,epsilon  = 0.05)
-cum_reg_epsilonGreedy_alloc  <- cumulativeRegret(epsilonGreedy_alloc$choice,visitor_reward)
+cum_reg_epsilonGreedy_alloc  <- cumulativeRegretAverage(epsilonGreedy_alloc$choice,visitor_reward,dt=dt)
 
 
 
 ############ Thompson Sampling ############
 
 thompson_sampling_alloc <- ThompsonSampling( visitor_reward)
-cum_reg_thompson_sampling_alloc <- cumulativeRegret(thompson_sampling_alloc$choice,visitor_reward)
+cum_reg_thompson_sampling_alloc <- cumulativeRegretAverage(thompson_sampling_alloc$choice,visitor_reward,dt=dt)
 
 
 
