@@ -528,3 +528,6 @@ ggplot(comp_reg, aes(c(1:nrow(comp_reg)), y = value, color = Algorithm)) +
   xlab("Time") +
   ylab("Cumulative Regret")
 
+
+
+## Demo UCB Rejection Sampling ##
