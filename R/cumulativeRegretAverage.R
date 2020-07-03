@@ -42,7 +42,7 @@
 
 #'@import graphics
 #'@export
-cumulativeRegretAverage <- function(choice, visitor_reward,dt=NA,IsRewardAreBoolean=FALSE,explanatory_variable=colnames(dt)) {
+cumulativeRegretAverage <- function(choice, visitor_reward,dt=NA,IsRewardAreBoolean=FALSE,explanatory_variable=colnames(dt),message_tree = FALSE) {
 
   ####Non contextual policy
   if(is.na(dt) == TRUE){
@@ -71,14 +71,29 @@ cumulativeRegretAverage <- function(choice, visitor_reward,dt=NA,IsRewardAreBool
   for(i in 1:ncol(visitor_reward)){
   ### learning  ###
   #Generate formula and tree
-  ctree_models[[i]] <-  ctree_formula_generate(dt = dt,
-                                       visitor_reward = temp.visitor_reward,
-                                       ctree_control_val = ctree_control(teststat = c("quadratic")),
-                                       arm_for_learn = colnames(visitor_reward[i]),
-                                       explanatory_variable= explanatory_variable,
-                                       learn_size = nrow(dt))
 
+    if( message_tree == TRUE){
+      ctree_models[[i]] <-  ctree_formula_generate(dt = dt,
+                                                   visitor_reward = temp.visitor_reward,
+                                                   ctree_control_val = ctree_control(teststat = c("quadratic")),
+                                                   arm_for_learn = colnames(visitor_reward[i]),
+                                                   explanatory_variable= explanatory_variable,
+                                                   learn_size = nrow(dt),print = TRUE)
+
+    }else{
+
+      ctree_models[[i]] <-  ctree_formula_generate(dt = dt,
+                                                   visitor_reward = temp.visitor_reward,
+                                                   ctree_control_val = ctree_control(teststat = c("quadratic"), alpha = 0.1),
+                                                   arm_for_learn = colnames(visitor_reward[i]),
+                                                   explanatory_variable= explanatory_variable,
+                                                   learn_size = nrow(dt),print = FALSE)
+
+
+
+    }
   }
+
 
   regret <- averageRegret(choice= as.vector(choice), visitor_reward,dt,ctree_models,isRewardAreBoolean=IsRewardAreBoolean)
   }

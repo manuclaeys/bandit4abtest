@@ -16,7 +16,7 @@
 #'@param dt Dataframe of integer or numeric values
 #'@param visitor_reward Dataframe of integer or numeric values
 #'@param K Integer value (optional)
-#'@param alpha Numeric value (optional)
+#'@param iter  Integer value (optional)
 #'
 #'@return
 #' \itemize{ List of element:
@@ -49,7 +49,9 @@
 #'@import MASS
 #'@export
 #TSLINUCB
-TSLINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
+TSLINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),iter = 10 ) {
+
+  set.seed(1234)
 
   #control data
   DataControlK(visitor_reward, K = K)
@@ -95,7 +97,11 @@ TSLINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward)) {
       A_inv      = solve(A[,,j])
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i   #variance
-      theta_tilde   = mvrnorm(1, th_hat[j,],((0.2)^2 * A_inv))  # sample from a multivariate distribution according to estimate covariance and mean
+
+      #correction 10 June 20 : More sampling
+      #theta_tilde   = mvrnorm(1, th_hat[j,],((0.2)^2 * A_inv))  # sample from a multivariate distribution according to estimate covariance and mean
+      # Max of sampling
+      theta_tilde   =  apply(mvrnorm(iter, th_hat[j,],((0.2)^2 * A_inv)),2,max)
       p[j]       =  x_i %*% theta_tilde
     }
 

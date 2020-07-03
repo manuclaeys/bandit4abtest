@@ -9,7 +9,8 @@ cumulativeRegretAverage(
   visitor_reward,
   dt = NA,
   IsRewardAreBoolean = FALSE,
-  explanatory_variable = colnames(dt)
+  explanatory_variable = colnames(dt),
+  message_tree = FALSE
 )
 }
 \arguments{

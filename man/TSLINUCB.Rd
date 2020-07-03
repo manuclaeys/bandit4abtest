@@ -4,16 +4,16 @@
 \alias{TSLINUCB}
 \title{TSLINUCB algorithm}
 \usage{
-TSLINUCB(dt, visitor_reward, alpha = 1, K = ncol(visitor_reward))
+TSLINUCB(dt, visitor_reward, alpha = 1, K = ncol(visitor_reward), iter = 10)
 }
 \arguments{
 \item{dt}{Dataframe of integer or numeric values}
 
 \item{visitor_reward}{Dataframe of integer or numeric values}
 
-\item{alpha}{Numeric value (optional)}
-
 \item{K}{Integer value (optional)}
+
+\item{iter}{Integer value (optional)}
 }
 \value{
 \itemize{ List of element:
