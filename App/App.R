@@ -21,7 +21,7 @@ library(knitr)
 library(tictoc)
 # -------------------------------
 
-rmdfiles <- c("FileForApp.html")
+rmdfiles <- c("Demo_Ctree_UCB.html")
 sapply(rmdfiles, knit, quiet = T)
 
 
@@ -208,7 +208,7 @@ ui <- dashboardPage(skin = "blue",
       
       # TabItem -- About
       tabItem(tabName = "ctree",
-              withMathJax(includeMarkdown("FileForApp.md")))
+              withMathJax(includeMarkdown("Demo_Ctree_UCB.md")))
     )
   )
 )
