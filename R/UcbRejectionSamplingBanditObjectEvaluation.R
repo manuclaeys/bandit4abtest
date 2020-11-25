@@ -40,7 +40,7 @@ UcbRejectionSamplingBanditObjectEvaluation <- function(visitor_reward=visitor_re
   cum_rew_ucb_rejection_sampling_alloc <- reward_cumulative(choice=ucb_rejection_sampling_bandit_alloc$choice,
                                                             visitor_reward=visitor_reward)
 
-  plot(cum_rew_ucb_rejection_sampling_alloc, type = 'l',ylab = "Ucb Rejection Sampling")
+  plot(cum_rew_ucb_rejection_sampling_alloc, type = 'l',ylab = "Cumulative Reward",xlab="Number of items")
   message(paste("average : "),max(cum_rew_ucb_rejection_sampling_alloc)/length(cum_rew_ucb_rejection_sampling_alloc), sep = " " )
   return (list('ucb_rejection_sampling_bandit_alloc'=ucb_rejection_sampling_bandit_alloc ,'cum_rew_ucb_rejection_sampling_alloc'=cum_rew_ucb_rejection_sampling_alloc))
 }

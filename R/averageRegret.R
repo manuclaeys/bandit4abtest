@@ -52,6 +52,9 @@
 #' }
 #'regret <- averageRegret(choice=choice,visitor_reward=visitor_reward,dt,ctree_models)
 #'plot(1:size.tot,  cumsum(regret))
+#ctreeucbobjet <- ctreeucb(dt,visitor_reward)
+#regret <- averageRegret(choice=ctreeucbobjet$choice,visitor_reward=visitor_reward[ctreeucbobjet$first_train_element:size.tot,],dt[ctreeucbobjet$first_train_element:size.tot,],ctree_models)
+#plot(1:length(regret),  cumsum(regret))
 #'@export
 averageRegret <- function(choice, visitor_reward,dt,ctree_models,isRewardAreBoolean=FALSE) {
 
