@@ -4,7 +4,8 @@
 \name{abtest1}
 \alias{abtest1}
 \title{abtest1}
-\format{A data frame with 53940 rows and 10 variables:
+\format{
+A data frame with 53940 rows and 10 variables:
 \describe{
   \item{countryID}{ID of visitor's country, factor}
   \item{latitude}{last position of visitor, recorded before the test, numeric}
@@ -16,7 +17,8 @@
   \item{A}{visitor's reward with A version of a website}
   \item{B}{visitor's reward with A version of a website}
   ...
-}}
+}
+}
 \source{
 \url{http://abtasty.com/}
 }
