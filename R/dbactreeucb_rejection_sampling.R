@@ -54,7 +54,7 @@
 #'
 #'@export
 #dbactreeucb_rejection_sampling agorithm
-dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_reward), listKCentroids , ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)){
+dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_reward), listSerie, listKCentroids , ctree_parameters_control=ctreeucb_parameters_control_default(dt,visitor_reward)){
 
   # set.seed(4321)
 
@@ -91,7 +91,7 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
 
   }
 
-
+  for(i in 1:length(listSerie)) dt[[paste("cluster",listSerie[i],sep = "")]] <- as.factor(dt[[paste("cluster",listSerie[i],sep = "")]])
 
   temp_list =  ctree_parameters_control$explanatory_variable
   #Remove series for ctreeucb learning step (we keep the clusters)
@@ -133,7 +133,7 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
     print(i)
     temp_i = temp_i + 1
     k <- k + 1
-    for(j in (as.integer( ctree_parameters_control$learn_size  )+1): nrow(dt)){
+    for(j in 1: nrow(dt)){
       #print(j)
       temp_clust = 1
       temp_clust_dist  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
