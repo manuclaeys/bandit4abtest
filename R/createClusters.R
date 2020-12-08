@@ -8,18 +8,19 @@
 #'@param listKCentroids  List of Integer (Number of centroid)
 #'@param plotCentroids Boolean (optional) If you want to see the centroids
 #'@param plotClusters Boolean (optional) If you want to see the clusters
+#'@param  maxIter Integer. Maximum number of allowed iterations for partitional/fuzzy clustering.
 #'
 #'@return Integer value
 #'
 #'@examples
 #'set.seed(100000)
 #'alpha_list <- c(1,2,3)
-#'beta_list <- c(0.3,0.2,-0.2)
+#'beta_list <- c(0.5,0.1,-0.2)
 #'theta_list <- c(0.8,0.2,0.5)
 #'y <- as.data.frame(c(1))
 #'colnames(y) = "ID"
 #'temp=1
-#'for (j in 1:10){
+#'for (j in 1:100){
 #'  for (i in 1:length(alpha_list)){
 #'    n = sample(1:1000,1)
 #'    t <- 1:n
@@ -30,12 +31,13 @@
 #'    temp = temp +1
 #'  }
 #'}
-#'obj <- createClusters(listSerie = c("time_series") , dt = y , method = "DBA" , listKCentroids=c(3) , plotCentroids = TRUE , plotClusters = TRUE )
+#'y <- y[sample(nrow(y)),]
+#'obj <- createClusters(listSerie = c("time_series") , dt = y , method = "DBA" , listKCentroids=c(3) , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 10L )
 #'table(obj$dt$cluster, obj$dt$clustertime_series)
 #'@import dtwclust doParallel cluster
 #'
 #'@export
-createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , listKCentroids , plotCentroids = TRUE , plotClusters = TRUE ) {
+createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , listKCentroids , plotCentroids = TRUE , plotClusters = TRUE  , maxIter = 10L) {
   #check if ListSeries element are in colnames dataframe
   ListSeriesControl(listSeriesList = listSerie ,dt=dt )
 
@@ -49,6 +51,8 @@ createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , list
   }
 
   #fast clustering
+  library(dtwclust)
+  library(doParallel)
   cl <- makeCluster(detectCores())
   invisible(clusterEvalQ(cl, library(dtwclust)))
   registerDoParallel(cl)
@@ -72,7 +76,7 @@ createClusters <- function(listSerie = colnames(dt) , dt , method = "DBA" , list
       ts <-   tsclust( dt[[i]], k = listKCentroids[j],
                        centroid = "dba",
                        seed = 3251, trace = TRUE
-                       ,control = partitional_control(nrep = 1L,iter.max = 10L ))
+                       ,control = partitional_control(nrep = 1L,iter.max = maxIter ))
     }
 
     pc.dba <-c(pc.dba, ts)

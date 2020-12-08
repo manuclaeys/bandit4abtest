@@ -10,7 +10,8 @@ createClusters(
   method = "DBA",
   listKCentroids,
   plotCentroids = TRUE,
-  plotClusters = TRUE
+  plotClusters = TRUE,
+  maxIter = 10L
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ createClusters(
 \item{plotCentroids}{Boolean (optional) If you want to see the centroids}
 
 \item{plotClusters}{Boolean (optional) If you want to see the clusters}
+
+\item{maxIter}{Integer. Maximum number of allowed iterations for partitional/fuzzy clustering.}
 }
 \value{
 Integer value
@@ -35,12 +38,12 @@ Create cluster based on a specified clustering method
 \examples{
 set.seed(100000)
 alpha_list <- c(1,2,3)
-beta_list <- c(0.3,0.2,-0.2)
+beta_list <- c(0.5,0.1,-0.2)
 theta_list <- c(0.8,0.2,0.5)
 y <- as.data.frame(c(1))
 colnames(y) = "ID"
 temp=1
-for (j in 1:10){
+for (j in 1:100){
  for (i in 1:length(alpha_list)){
    n = sample(1:1000,1)
    t <- 1:n
@@ -51,5 +54,7 @@ for (j in 1:10){
    temp = temp +1
  }
 }
-obj <- createClusters(listSerie = c("time_series") , dt = y , method = "DBA" , listKCentroids=c(3) , plotCentroids = TRUE , plotClusters = TRUE )
+y <- y[sample(nrow(y)),]
+obj <- createClusters(listSerie = c("time_series") , dt = y , method = "DBA" , listKCentroids=c(3) , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 10L )
+table(obj$dt$cluster, obj$dt$clustertime_series)
 }
