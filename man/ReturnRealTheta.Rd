@@ -4,7 +4,7 @@
 \alias{ReturnRealTheta}
 \title{ReturnRealTheta}
 \usage{
-ReturnRealTheta(dt, visitor_reward, option = "linear")
+ReturnRealTheta(dt, visitor_reward, option = "linear", listCategorial = NA)
 }
 \arguments{
 \item{dt}{Dataframe of context}

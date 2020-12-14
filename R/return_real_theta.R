@@ -31,14 +31,12 @@
 #'@import stats
 #'@export
 #
-ReturnRealTheta <- function(dt, visitor_reward,option="linear") {
+ReturnRealTheta <- function(dt, visitor_reward,option="linear",listCategorial = NA) {
 
   K <- ncol(visitor_reward)
   n_f <- ncol(dt)
+  th <- c()
   #creat th object
-  th = array(0, c(K,n_f))
-  colnames(th) <- colnames(dt)
-  rownames(th) <- colnames(visitor_reward)
 
   #tempory variable
   temp <- as.data.frame(dt)
@@ -48,7 +46,7 @@ ReturnRealTheta <- function(dt, visitor_reward,option="linear") {
 
       linearMod <- lm(prediction ~. , data = temp)  # build linear regression model on full data
       #intercept is not save
-      th[i,] <- linearMod$coefficients[-1]
+      th <- rbind(th ,  linearMod$coefficients[-1])
 
       temp$prediction <- NULL
     }
@@ -60,11 +58,12 @@ ReturnRealTheta <- function(dt, visitor_reward,option="linear") {
 
       logitMod <- glm(prediction ~. , family=binomial(link='logit'), data = temp)  # build linear regression model on full data
       #intercept is not save
-      th[i,] <- logitMod$coefficients[-1]
+      th <- rbind(th ,  linearMod$coefficients[-1])
 
       temp$prediction <- NULL
     }
   }
+
 
   return ('th'=th)
 

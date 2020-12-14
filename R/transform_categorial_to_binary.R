@@ -30,6 +30,12 @@ transform_categorial_to_binary <- function(listCategorial=0 , listInteger=0,dt){
 
   }
 
+  #update
+   temp = vect_to_matrix_transform(dt[,listCategorial])
+   temp2 = cbind(dt[,listInteger],temp)
+   return(as.matrix(temp2))
+
+
   return(cbind(dt[,listInteger],model.matrix(~ . + 0, data=dt[,listCategorial] ,
                                              contrasts.arg = lapply(dt[,listCategorial] , contrasts, contrasts=FALSE))))
 }
