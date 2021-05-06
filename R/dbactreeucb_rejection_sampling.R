@@ -109,7 +109,7 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
 
   ### learning  ###
   #Learn Clustering
-  obj <- createClusters(listSerie = listSerie , dt = dt[1:ctree_parameters_control$learn_size , ] , method = "DBA" , listKCentroids=listKCentroids , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 10L )
+  obj <- createClusters(listSerie = listSerie , dt = dt[1:ctree_parameters_control$learn_size , ] , method = "DBA" , listKCentroids=listKCentroids , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 100L )
   #centroid <- obj$clust_obj[[1]]@centroids
 
   #dt$cluster <- NA
@@ -159,30 +159,51 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
   visitor_reward <- visitor_reward[c((ctree_parameters_control$learn_size+1):nrow(visitor_reward)),]
 
 
-  ### Training  ###
+  ### AB Test ###
 
   #define cluster for each item
-  k=0
-  temp_i=0
+  # k=0
+  # temp_i=0
+  # for(i in listSerie){
+  #    print(i)
+  #   temp_i = temp_i + 1
+  #  k <- k + 1
+  #   for(j in 1: nrow(dt)){
+  #     #print(j)
+  #     temp_clust = 1
+  #     temp_clust_dist  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
+  #     for(l in 2:listKCentroids[k]){
+
+  #     #init
+  #      if(temp_clust_dist > dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[l]))$distance){
+  #        temp_clust = l
+  #        temp_clust_dist  =  dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
+  #     }
+  #    }
+  #    dt[[paste("cluster",listSerie[k],sep = "")]][j] <- as.factor( temp_clust )
+  #  }
+  #}
+
+  #define cluster for each item
+  temp_i = 1
   for(i in listSerie){
     print(i)
-    temp_i = temp_i + 1
-    k <- k + 1
+    list_K_cluster = rep(0,listKCentroids[temp_i])
     for(j in 1: nrow(dt)){
-      #print(j)
-      temp_clust = 1
-      temp_clust_dist  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
-      for(l in 2:listKCentroids[k]){
 
-        #init
-        if(temp_clust_dist > dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[l]))$distance){
-          temp_clust = l
-          temp_clust_dist  =  dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
-        }
+      for(k in 1:listKCentroids[temp_i]){
+        list_K_cluster[k]  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[k]))$distance
       }
-      dt[[paste("cluster",listSerie[k],sep = "")]][j] <- as.factor( temp_clust )
+
+
+      dt[[paste("cluster",listSerie[temp_i],sep = "")]][j] <- as.factor( which.min(list_K_cluster))
     }
+      temp_i = temp_i+1
   }
+
+
+
+
 
 ######
 
