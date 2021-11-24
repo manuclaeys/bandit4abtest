@@ -87,8 +87,34 @@ LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),IsRewardA
     A[,,j]= diag(n_f)
   }
 
+  for (i in 1:K) {
+    x_i = D[i,]
+    for (j in 1:K) {
+      A_inv      = solve(A[,,j])
+      th_hat[j,] = A_inv %*% b[j,]
+      ta         = t(x_i) %*% A_inv %*%  x_i
+      a_upper_ci = alpha * sqrt(ta)             # upper part of variance interval
+      a_mean     = th_hat[j,] %*% x_i              # current estimate of mean
+      p[j]       = a_mean + a_upper_ci         # top CI
+    }
 
-  for (i in 1:n) {
+    # choose the highest,
+    choices[i] = i
+
+    #save probability
+    proba[i] =unlist(p[i])
+
+    # see what kind of result we get
+    rewards[i] = visitor_reward[i,as.integer(choices[i])]
+
+    # update the input vector
+    A[,,as.integer(choices[i])] = A[,,as.integer(choices[i])]  + x_i %*% t(x_i) #covariance matrix
+    b[as.integer(choices[i]),] = b[as.integer(choices[i]),] +  x_i * as.numeric(rewards[i])
+
+
+  }
+
+  for (i in (K+1):n) {
     x_i = D[i,]
     for (j in 1:K) {
       A_inv      = solve(A[,,j])
