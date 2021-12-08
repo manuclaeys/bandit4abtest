@@ -192,7 +192,7 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
     for(j in 1: nrow(dt)){
 
       for(k in 1:listKCentroids[temp_i]){
-        list_K_cluster[k]  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[k]))$distance
+        list_K_cluster[k]  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[temp_i]]@centroids[k]))$distance
       }
 
 
