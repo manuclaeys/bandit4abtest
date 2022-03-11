@@ -89,7 +89,14 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
     x_i = D[i,]
     cat("x_i",x_i,'\n')
     for (j in 1:K) {
-      A_inv      = solve(A[,,j])
+         tryCatch({
+         A_inv      = solve(A[,,j])
+          },
+        error = function(e){
+        message("Warning ! Error in solve.default(A[, , j]) ")
+        A_inv      = A_inv}
+      )
+
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i
       a_upper_ci = alpha * sqrt(ta)             # upper part of variance interval

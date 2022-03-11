@@ -98,23 +98,21 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
   #data controle
   DataControlK(visitor_reward, K = K)
   library(dplyr)
-  #DataControlContextReward(dt%>% select(-listSerie), visitor_reward)
 
-  #Change the type of data TO CHECK
-  #temp <-changeDataTypeForCtreeUCB(dt=dt,visitor_reward=visitor_reward,is_reward_are_boolean=ctree_parameters_control$is_reward_are_boolean)
-  #dt <- temp$dt
 
-  #if reward is boolean, data will be modify temporary
-  #temp.visitor_reward <- temp$visitor_reward
+  if(ctree_parameters_control$is_reward_are_boolean){
+    for(i in 1:K)  visitor_reward[,i] =  as.factor(visitor_reward[,i])
+  }
+
+
+
 
   ### learning  ###
   #Learn Clustering
   obj <- createClusters(listSerie = listSerie , dt = dt[1:ctree_parameters_control$learn_size , ] , method = "DBA" , listKCentroids=listKCentroids , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 100L )
-  #centroid <- obj$clust_obj[[1]]@centroids
 
-  #dt$cluster <- NA
-  #dt[1:ctree_parameters_control$learn_size , ]$cluster <- obj$dt$cluster
-  #dt$cluster <- as.factor(dt$cluster)
+
+
   #Add clusters
   for(i in 1:length(listSerie)) dt[[paste("cluster",listSerie[i],sep = "")]] <- 0
   for(i in 1:length(listSerie)){
@@ -141,6 +139,8 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
                                        explanatory_variable= temp_list,
                                        learn_size = ctree_parameters_control$learn_size,
                                        print=TRUE)
+
+
   #return to regular data
   visitor_reward <- visitor_reward
 
@@ -212,6 +212,11 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
   dt$groups <- predict(ctree_tree, newdata=dt, type="node")
   dt$choice <- 0
   dt$regret <- NA
+
+ if(ctree_parameters_control$is_reward_are_boolean){
+   for(i in 1:K)  visitor_reward[,i] =  as.integer(as.character(visitor_reward[,i]))
+ }
+
   dt <- cbind(dt,visitor_reward)
   groups <- dt$groups
 
@@ -228,6 +233,8 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
   library(tictoc)
   tic()
 
+
+
   #for each groups play a private strategy of ucb
   for(i in levels(as.factor(dt$groups ))){
 
@@ -235,6 +242,7 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
     #Subset visitors from this segment
     visitor_reward_for_ctree <- subset.data.frame(dt,dt$groups== i)
     visitor_reward_for_ctree <-  visitor_reward_for_ctree [,(ncol(visitor_reward_for_ctree) -K+1):ncol(visitor_reward_for_ctree )]
+
 
     #UCB results
     ucb_temp_res <- UCB_rejection_sampling(visitorReward=visitor_reward_for_ctree , K=K ,alpha =ctree_parameters_control$alpha)

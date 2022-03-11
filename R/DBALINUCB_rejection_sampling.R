@@ -71,29 +71,45 @@ DBALINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(vis
 
   }
 
+
+  #remove the learn set
+  dt.old <- dt
+  #update handle one covariate
+
+
+
+  dt <- dt[c((learn_size+1):nrow(dt)),]
+
+
+  visitor_reward <- visitor_reward[c((learn_size+1):nrow(visitor_reward)),]
+
+
+  ### AB Test ###
+
+
+
+
+
+
+
+
+
+
   #Choose a cluster for the test dataset
   #define cluster for each item
-  k=0
-  temp_i=0
+  temp_i = 1
   for(i in listSerie){
     print(i)
-    temp_i = temp_i + 1
-    k <- k + 1
-    for(j in learn_size:nrow(dt)){
-      #print(j)
-      temp_clust = 1
-      temp_clust_dist  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
-      for(l in 2:listKCentroids[k]){
+    list_K_cluster = rep(0,listKCentroids[temp_i])
+    for(j in 1: nrow(dt)){
 
-        #init
-        if(temp_clust_dist > dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[l]))$distance){
-          temp_clust = l
-          #print(l)
-          temp_clust_dist  =  dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
-        }
+      for(k in 1:listKCentroids[temp_i]){
+        list_K_cluster[k]  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[temp_i]]@centroids[k]))$distance
       }
-      dt[[paste("cluster",listSerie[k],sep = "")]][j] <- temp_clust
+      #print(which.min(list_K_cluster))
+      dt[[paste("cluster",listSerie[temp_i],sep = "")]][j] <-  which.min(list_K_cluster)
     }
+    temp_i = temp_i+1
   }
 
   ######
@@ -113,13 +129,20 @@ DBALINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(vis
   #keep old dt for return theta hat function
   dt.old <- dt
 
-  D <- transform_categorial_to_binary(listCategorial= listCategorial, listInteger=listInteger,dt = as.data.frame(dt[,c(listCategorial,listInteger)]))
+  if(listInteger != 0){
+    D <- transform_categorial_to_binary(listCategorial= listCategorial, listInteger=listInteger,dt = as.data.frame(dt[,c(listCategorial,listInteger)]))
+
+  }else{
+
+    D <- transform_categorial_to_binary(listCategorial= listCategorial, listInteger=0,dt = as.data.frame(dt[,c(listCategorial)]))
+
+  }
 
   #Context matrix
-  D <- as.matrix(D[learn_size:nrow(dt),])
-  visitorReward <- as.data.frame(visitorReward[learn_size:nrow(visitorReward ),])
+  D <- as.matrix(D)
+  visitorReward <- visitor_reward
 
-  n <- nrow(dt) - learn_size +1
+  n <- nrow(dt)
   n_f <- ncol(D)
 
   #Keep the past choice for regression
@@ -206,11 +229,13 @@ DBALINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(vis
   time <- toc()
 
   #return real theta from a rigide regression
-  if(IsRewardAreBoolean == FALSE) th <- ReturnRealTheta(dt=dt.old[learn_size:nrow(dt),c(listInteger,listCategorial)],
-                                                        visitorReward, option = "linear")
+#  if(IsRewardAreBoolean == FALSE) th <- ReturnRealTheta(dt=dt.old[learn_size:nrow(dt),c(listInteger,listCategorial)],
+ #                                                       visitorReward, option = "linear")
 
   #return real theta from a logit regression TO CHECK
-  if(IsRewardAreBoolean == TRUE) th <- ReturnRealTheta(dt=as.data.frame(D),visitorReward, option = "logit")
+  #  if(IsRewardAreBoolean == TRUE) th <- ReturnRealTheta(dt=as.data.frame(D),visitorReward, option = "logit")
+
+  th = NA
 
   #return  data , models, groups and results
   return (list('proba' = unlist(proba),'theta_hat'=th_hat,'theta'=th,'choice'=unlist(choices),'first_train_element'=learn_size  ,'time'=(time$toc - time$tic)))
