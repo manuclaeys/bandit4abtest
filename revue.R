@@ -1,8 +1,7 @@
 #Install from github
 #install.packages("devtools")
-library(devtools)
-#install_github("https://github.com/R-workshop-strasbourg/bandit4abtest/tree/master/bandit4abtest")
-install_github("https://github.com/manuclaeys/bandit4abtest")
+#library(devtools)
+#install_github("https://github.com/manuclaeys/bandit4abtest")
 
 ##Poster demo
 

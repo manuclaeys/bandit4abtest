@@ -24,7 +24,7 @@ Description: Contains functions for improve traditional A/B test by methods from
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: R (>= 2.10)
 Imports: 
     tictoc,

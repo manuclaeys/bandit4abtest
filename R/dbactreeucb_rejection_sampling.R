@@ -109,15 +109,21 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
 
   ### learning  ###
   #Learn Clustering
-  obj <- createClusters(listSerie = listSerie , dt = dt[1:ctree_parameters_control$learn_size , ] , method = "DBA" , listKCentroids=listKCentroids , plotCentroids = TRUE , plotClusters = TRUE , maxIter = 100L )
-
+  clust_data = dt[1:ctree_parameters_control$learn_size & (is.na(visitor_reward[1:ctree_parameters_control$learn_size, ctree_parameters_control$arm_for_learn]))==FALSE ,  ]
+  obj <- createClusters(listSerie = listSerie , dt = clust_data  ,
+                        method = "DBA" ,
+                        listKCentroids=listKCentroids ,
+                        plotCentroids = TRUE ,
+                        plotClusters = TRUE ,
+                        maxIter = 100L )
 
 
   #Add clusters
   for(i in 1:length(listSerie)) dt[[paste("cluster",listSerie[i],sep = "")]] <- 0
   for(i in 1:length(listSerie)){
 
-    dt[[paste("cluster",listSerie[i],sep = "")]][1:ctree_parameters_control$learn_size] <- obj$clust_obj[[i]]@cluster
+    dt[[paste("cluster",listSerie[i],sep = "")]][1:ctree_parameters_control$learn_size & (is.na(visitor_reward[1:ctree_parameters_control$learn_size, ctree_parameters_control$arm_for_learn]))==FALSE] <- obj$clust_obj[[i]]@cluster
+
 
     #Add cluster to explanatory variables
     ctree_parameters_control$explanatory_variable <- c( ctree_parameters_control$explanatory_variable,paste("cluster",listSerie[i],sep = ""))
@@ -160,29 +166,17 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
 
 
   ### AB Test ###
+  temp_i = 1
+  for(i in listSerie){
+    if( listKCentroids[temp_i] != length(levels(ctree_tree$data[[paste("cluster",listSerie[temp_i],sep = "")]]))){
+      message(paste("A label was exclude (not in the tree) from", listSerie[temp_i], sep = " "))
+      message(paste("nb clusters ",listKCentroids[temp_i],  sep = " "))
+      message(paste("level  ",  levels(ctree_tree$data[[paste("cluster",listSerie[temp_i],sep = "")]]), sep = " "))
+    }
+    temp_i = temp_i+1
+  }
 
-  #define cluster for each item
-  # k=0
-  # temp_i=0
-  # for(i in listSerie){
-  #    print(i)
-  #   temp_i = temp_i + 1
-  #  k <- k + 1
-  #   for(j in 1: nrow(dt)){
-  #     #print(j)
-  #     temp_clust = 1
-  #     temp_clust_dist  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
-  #     for(l in 2:listKCentroids[k]){
 
-  #     #init
-  #      if(temp_clust_dist > dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[l]))$distance){
-  #        temp_clust = l
-  #        temp_clust_dist  =  dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[1]]@centroids[1]))$distance
-  #     }
-  #    }
-  #    dt[[paste("cluster",listSerie[k],sep = "")]][j] <- as.factor( temp_clust )
-  #  }
-  #}
 
   #define cluster for each item
   temp_i = 1
@@ -193,9 +187,13 @@ dbactreeucb_rejection_sampling <- function(dt,visitor_reward,K=ncol(visitor_rewa
 
       for(k in 1:listKCentroids[temp_i]){
         list_K_cluster[k]  = dtw2(unlist(dt[[i]][j]), unlist(obj$clust_obj[[temp_i]]@centroids[k]))$distance
+
+        ### exclude level not in the tree ==> predic problem
+        if(!k %in% levels(ctree_tree$data[[paste("cluster",listSerie[temp_i],sep = "")]])){
+          list_K_cluster[k]  = 1/0
+
+        }
       }
-
-
       dt[[paste("cluster",listSerie[temp_i],sep = "")]][j] <- as.factor( which.min(list_K_cluster))
     }
       temp_i = temp_i+1
