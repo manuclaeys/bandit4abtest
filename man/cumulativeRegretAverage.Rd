@@ -7,7 +7,7 @@
 cumulativeRegretAverage(
   choice,
   visitor_reward,
-  dt = NA,
+  dt = 0,
   IsRewardAreBoolean = FALSE,
   explanatory_variable = colnames(dt),
   message_tree = FALSE

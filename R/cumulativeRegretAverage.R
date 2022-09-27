@@ -42,10 +42,10 @@
 
 #'@import graphics
 #'@export
-cumulativeRegretAverage <- function(choice, visitor_reward,dt=NA,IsRewardAreBoolean=FALSE,explanatory_variable=colnames(dt),message_tree = FALSE) {
+cumulativeRegretAverage <- function(choice, visitor_reward,dt=0,IsRewardAreBoolean=FALSE,explanatory_variable=colnames(dt),message_tree = FALSE) {
 
   ####Non contextual policy
-  if(is.na(dt) == TRUE){
+  if(length(dt)==1){
     max_average_regret = max(colMeans(visitor_reward))
     regret <- c()
     for (i in 1:nrow(visitor_reward)) {
@@ -55,7 +55,7 @@ cumulativeRegretAverage <- function(choice, visitor_reward,dt=NA,IsRewardAreBool
   }
 
   ###Contextual policy
-  if(is.na(dt) == FALSE){
+  if(length(dt)>1){
     ####Model construction
    library(partykit)
 

@@ -14,8 +14,9 @@ library(jsonlite)
 library(readr)
 
 data.train  <- jsonlite::fromJSON("parcoursuserDatabaseFinalModz1", simplifyDataFrame = TRUE)
-visitorReward <- jsonlite::fromJSON("parcours_reward_modz.JSON", simplifyDataFrame = TRUE)
-
+#visitorReward <- jsonlite::fromJSON("parcours_reward_modz.JSON", simplifyDataFrame = TRUE)
+visitorReward <- read.csv2("~/Documents/Experimentation/dbactreeucb/ModzLeaveAtLeastOne.csv", header = TRUE, sep = ',',colClasses=c("fullVisitorId"="character"))
+visitorReward$X = NULL
 
 
 total <- merge(data.train ,visitorReward, by="fullVisitorId")
@@ -58,6 +59,10 @@ learnset = total
 testset = total
 i=1
 
+  learnset = learnset[sample(nrow(learnset)),]
+  testset = testset[sample(nrow(testset)),]
+  total = rbind(learnset,testset)
+  config = 0.5
 
   #Config 70 - 30
   config = 0.3
@@ -77,7 +82,7 @@ i=1
                                                                arm_for_learn = names(visitor_reward)[1],
                                                                learn_size = as.integer(nrow(dt) * config))
   listSerie = c("presence_time_serie","time_spend_time_serie","connexion_time_time_serie")
-  listKCentroids=c(11,3,3)
+  listKCentroids=c(5,10,5)
 
 
   resVal_dbactreeucb <- dbactreeucbRejectionSamplingBanditObjectEvaluation(dt,visitor_reward,K, listSerie, listKCentroids , ctree_parameters_control)

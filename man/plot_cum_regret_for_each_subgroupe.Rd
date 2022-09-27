@@ -9,9 +9,6 @@ plot_cum_regret_for_each_subgroupe(ctree_ucb_object, average = FALSE)
 \arguments{
 \item{ctree_ucb_object}{Dataframe of integer or numeric values}
 }
-\value{
-
-}
 \description{
 plot cum regret for each subgroupe of ctreeucb object. See \code{\link{ctree}} using visitor_reward and dt values.
 }
