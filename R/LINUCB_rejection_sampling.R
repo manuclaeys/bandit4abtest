@@ -90,7 +90,7 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
     cat("x_i",x_i,'\n')
     for (j in 1:K) {
          tryCatch({
-         A_inv      = solve(A[,,j])
+         A_inv      = inv(t(A[,,j]))
           },
         error = function(e){
         message("Warning ! Error in solve.default(A[, , j]) ")
