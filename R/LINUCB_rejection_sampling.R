@@ -81,7 +81,7 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
   #time keeper
   library(tictoc)
   tic()
-
+  print(i)
   #initialization
   for (j in 1:K) {
     A[,,j]= diag(n_f)
@@ -91,10 +91,10 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
     x_i = D[i,]
     cat("x_i",x_i,'\n')
     for (j in 1:K) {
-         tryCatch({
-         A_inv      = inv(t(A[,,j]))
-          },
-        error = function(e){
+      tryCatch({
+        A_inv      =  inv(t(A[,,j])) #solve(A[,,j])
+      },
+      error = function(e){
         message("Warning ! Error in solve.default(A[, , j]) ")
         A_inv      = A_inv}
       )
@@ -105,22 +105,32 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
       a_mean     = th_hat[j,] %*% x_i              # current estimate of mean
       p[j]       = a_mean + a_upper_ci         # top CI
 
-      cat("Arm",j,'\n')
-     # cat("A_inv=",A_inv,'\n')
-      cat("th_hat=",as.character(th_hat[j,]),'\n')
-     # cat("ta",ta,'\n')
-    #  cat("a_upper_ci",a_upper_ci,'\n')
-    #  cat("a_mean",a_mean,'\n')
-      cat("prob",as.character( p[j] ),'\n')
+      # cat("Arm",j,'\n')
+      # cat("A_inv=",A_inv,'\n')
+      # cat("th_hat=",as.character(th_hat[j,]),'\n')
+      # cat("ta",ta,'\n')
+      #  cat("a_upper_ci",a_upper_ci,'\n')
+      #  cat("a_mean",a_mean,'\n')
+      # cat("prob",as.character( p[j] ),'\n')
     }
 
-    # choose the highest,
-    choices[i] = which.max(p)
+    #try each arm
+    for(k in 1:K){
+      if((k  %in% choices)==FALSE){
+        cat('test',k,'\n')
+        choices[i] = k
+      }else{
+        # choose the highest,
+        choices[i] = which.max(p)
+      }
+    }
+
+
     cat("choice",as.character(choices[i]),'\n')
 
     #save probability
     proba[i] = max(unlist(p))
-  #  cat("proba",as.character(p),'\n')
+    #  cat("proba",as.character(p),'\n')
 
     ####Rejection sampling
 
@@ -128,16 +138,16 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
     if(is.na(visitorReward[i,as.integer(choices[i])])==FALSE){
       cat("None empty reward",'\n')
       temp_i = temp_i +1
-      cat("temp_i",temp_i,'\n')
+      #  cat("temp_i",temp_i,'\n')
       # see what kind of result we get
       rewards[i] = visitorReward[i,as.integer(choices[i])]
-      cat("rewards",as.character(rewards[i]),'\n')
+      #  cat("rewards",as.character(rewards[i]),'\n')
 
       # update the input vector
       A[,,as.integer(choices[i])] = A[,,as.integer(choices[i])]  + x_i %*% t(x_i)
-      cat("update the input vector A",A[,,as.integer(choices[i])],'\n')
+      # cat("update the input vector A",A[,,as.integer(choices[i])],'\n')
       b[as.integer(choices[i]),] = b[as.integer(choices[i]),] +  x_i * as.numeric(rewards[i])
-      cat("b ",b[as.integer(choices[i]),],'\n')
+      #  cat("b ",b[as.integer(choices[i]),],'\n')
     }
 
     if(is.na(visitorReward[i,as.integer(choices[i])])==TRUE){
