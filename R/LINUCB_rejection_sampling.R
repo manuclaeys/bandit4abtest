@@ -75,6 +75,8 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
   p = list(rep.int(0, K))
   temp_i <- 0
 
+  library(matlib)
+
   cat("début",'\n')
   #time keeper
   library(tictoc)
@@ -99,7 +101,7 @@ LINUCB_rejection_sampling <- function(dt, visitor_reward, alpha=1, K=ncol(visito
 
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i
-      a_upper_ci = alpha * sqrt(ta)             # upper part of variance interval
+      a_upper_ci = alpha * sqrt(abs(ta))             # upper part of variance interval
       a_mean     = th_hat[j,] %*% x_i              # current estimate of mean
       p[j]       = a_mean + a_upper_ci         # top CI
 
