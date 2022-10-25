@@ -90,7 +90,7 @@ LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),IsRewardA
   for (i in 1:K) {
     x_i = D[i,]
     for (j in 1:K) {
-      A_inv      = solve(A[,,j])
+      A_inv      = inv(t(A[,,j])) #solve(A[,,j])
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i
       a_upper_ci = alpha * sqrt(ta)             # upper part of variance interval
@@ -117,7 +117,7 @@ LINUCB <- function(dt, visitor_reward, alpha=1, K=ncol(visitor_reward),IsRewardA
   for (i in (K+1):n) {
     x_i = D[i,]
     for (j in 1:K) {
-      A_inv      = solve(A[,,j])
+      A_inv      = inv(t(A[,,j])) #solve(A[,,j])
       th_hat[j,] = A_inv %*% b[j,]
       ta         = t(x_i) %*% A_inv %*%  x_i
       a_upper_ci = alpha * sqrt(ta)             # upper part of variance interval
